@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EFIKA | Portal de Clientes</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%;width:100%}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#030A0F 0%,#011C2A 40%,#003444 72%,#004655 100%);background-attachment:fixed;color:#fff;min-height:100vh}
+/* GLOW */
+.glow{position:fixed;width:900px;height:900px;border-radius:50%;top:-250px;right:-250px;background:radial-gradient(circle,rgba(0,180,204,0.09) 0%,transparent 70%);pointer-events:none;z-index:0}
+/* LOGIN */
+#login{position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#030A0F 0%,#011C2A 40%,#003444 72%,#004655 100%)}
+.lg-card{background:rgba(5,22,32,0.92);backdrop-filter:blur(28px);border:1px solid rgba(0,180,204,0.18);border-radius:22px;padding:44px 46px;width:400px;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.lg-logo{display:flex;justify-content:center;margin-bottom:8px}
+.lg-logo img{height:54px;object-fit:contain}
+.lg-sub{text-align:center;color:rgba(255,255,255,.5);font-size:13px;margin-bottom:28px;letter-spacing:.3px}
+.lg-lbl{display:block;font-size:12px;color:rgba(255,255,255,.55);margin:14px 0 6px;letter-spacing:.3px}
+.lg-inp{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;padding:12px 14px;font-size:14px;outline:none;transition:.2s}
+.lg-inp:focus{border-color:#00B4CC;background:rgba(0,180,204,.04)}
+.lg-btn{width:100%;margin-top:22px;background:linear-gradient(135deg,#007A8C,#00C5D8);border:none;border-radius:11px;color:#fff;font-weight:700;font-size:14px;padding:14px;cursor:pointer;letter-spacing:.4px;transition:.15s}
+.lg-btn:hover{opacity:.88;transform:translateY(-1px)}
+.lg-err{display:none;color:#f87171;font-size:12px;text-align:center;margin-top:12px}
+/* APP */
+#app{display:none;position:relative;z-index:1;width:100%;min-height:100vh}
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:18px 40px;font-size:13px;color:rgba(255,255,255,.5);border-bottom:1px solid rgba(0,180,204,.08)}
+.topbar-user{color:rgba(255,255,255,.7)}
+.logout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;transition:.15s}
+.logout:hover{background:rgba(255,255,255,.1);color:#fff}
+/* HERO */
+.hero{padding:48px 40px 32px;text-align:center}
+.hero-title{font-size:32px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+.hero-div{width:60px;height:3px;background:linear-gradient(90deg,#007A8C,#00C5D8);border-radius:2px;margin:0 auto 14px}
+.hero-sub{color:rgba(255,255,255,.45);font-size:14px;letter-spacing:.2px}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;padding:0 40px 60px;max-width:1600px;margin:0 auto}
+/* CARD */
+.card{background:rgba(5,22,32,0.72);border:1px solid rgba(0,180,204,0.13);border-radius:18px;padding:26px;display:flex;flex-direction:column;transition:.18s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,180,204,.04) 0%,transparent 60%);pointer-events:none}
+.card:hover{border-color:rgba(0,180,204,.35);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.card-logo-area{height:60px;display:flex;align-items:center;margin-bottom:18px}
+.card-logo-area img{max-height:52px;max-width:160px;object-fit:contain;filter:brightness(1.05)}
+.logo-fallback{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;letter-spacing:-.5px;flex-shrink:0}
+.fb-cs{background:rgba(0,180,204,.15);color:#00C5D8;border:1px solid rgba(0,180,204,.3)}
+.fb-cn{background:rgba(225,29,46,.12);color:#e85060;border:1px solid rgba(225,29,46,.3)}
+.fb-bv{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.fb-ah{background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.3)}
+.fb-pv{background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
+.card-nm{font-size:20px;font-weight:800;margin-bottom:6px;letter-spacing:-.2px}
+.card-tg{font-size:13px;color:rgba(255,255,255,.45);line-height:1.55;margin-bottom:auto;padding-bottom:20px}
+.open{display:block;text-align:center;background:linear-gradient(135deg,#007A8C,#00C5D8);color:#fff;text-decoration:none;border-radius:11px;padding:12px;font-weight:800;font-size:13px;letter-spacing:.6px;margin-top:20px;transition:.15s}
+.open:hover{opacity:.88;transform:translateY(-1px)}
+/* FOOT */
+.foot{text-align:center;padding:24px 40px 32px;color:rgba(255,255,255,.25);font-size:12px}
+</style></head>
+<body>
+<div class="glow"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lg-card">
+    <div class="lg-logo"><img src="https://efika.cl/wp-content/uploads/2020/06/cropped-LOGO2.png" alt="EFIKA"></div>
+    <div class="lg-sub">Portal de Clientes</div>
+    <label class="lg-lbl">Usuario</label>
+    <input class="lg-inp" id="u" type="text" placeholder="Ingrese usuario" autocomplete="username">
+    <label class="lg-lbl">Contrase&ntilde;a</label>
+    <input class="lg-inp" id="p" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password">
+    <button class="lg-btn" onclick="login()">Ingresar</button>
+    <div class="lg-err" id="err">Usuario o contrase&ntilde;a incorrectos</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <div class="topbar">
+    <span class="topbar-user">Bienvenido, <strong id="who"></strong></span>
+    <button class="logout" onclick="logout()">Cerrar sesi&oacute;n</button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-title">Portal de Clientes</div>
+    <div class="hero-div"></div>
+    <div class="hero-sub">Gesti&oacute;n consultiva y control de servicios TIC &mdash; Acceso interno EFIKA</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- CONSALUD -->
+    <div class="card">
+      <div class="card-logo-area">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARQAAABZCAYAAAD/wdt/AAAaj0lEQVR42u2de1hTZ57HvwdiwMMdDCIhYLhoVVCoVFArPmirVhRtra3OWLXjM+12ZvfZ1dG5PHVnZ1t95lJXZ7Ydbd2nMzp1W6tPpxWltRdlRVFwoFzlKiAEEEESAiGGmPDuH5CUkHNyAXKz7+cfJck55z3ved/veS+/C0MIAYVCoUwGXrQKKBQKFRQKhUIFhUKhUEGhUCgUqwg8rcDdGg06HqhJjbIXd9VqdDxQo0WlglqvQ4dajV6tFgCgHdJDMfJ/AAgRCiH08kawUIhIlgXrLcCswCBE+/khTRSOBSGhDG0OFMrEYNx5l0ep1aKiV06K799HuUKOCoUcdX1KqHW6Sb+W1D8Av0ycj1dmPUaFhUJ5VASlXCEnl+924FJnB8rkPWhXq516/fw1WVgWHkFFhULx1ClPuUJOzt5pxuftMpTKe1xalvx7nVgWHkFbBoXiSYKi1Grx8Z0m8tfGBhR2d7lNhaSEhtFWQaF4iqDUKHvJX27X42hdjUPWQiaCmGWxViyh0x0Kxd0FpUbZS96urcaxuhq3rYyt0jjaIigUdxYUpVaLA5Vl5NCtSrevjB/Fz6ItgkJxV0E5Xl9L3qgodfpOzXhICQ3DnKBgOt2hUNxNUGqUvWRfyU3ktsk8piJeio2nrYFCcTdBOVJdRfYUF3lcRWyLjaejEwrFXQRFo9dj+7Ur5GxLs8dVQlaUBCJfX9oaKBR3EJRyhZw8m/cNmlX9HlkJ2+h0h0JxD0HJkbWSDXlfe2wFsAIBNkpi6HSHQpkEJhS+4Hh9rUeLCQBsjpHC19ubtgQKxZWCcrCyjLxaWODxFbArgdqeUCguFZSDlWVkf2mJx9+8mGWpZzGF4kpBOV5f+0iICUBN7SkUlwpKjqz1kZjmGKCm9hSKiwSlXCH3+AXY0VBTewpl8rFp21ij1yPr0peP1I1TU3uKszl9p4lUKRQAgMeCgjzeOvtU021Sq1RiqsAbKaFhWCuWMDYJyvNXLhFPcPCzB2pqT3EmXC4p17u7yNG0JR7ZDveV3DSLIPBRRibxsqUiPMnJzxaoqT3F2Vzq7DD77GJ7m+fez13u+7EoKC0DKniio581tsyMpS2c4lRYb/PJwPSpUz32fnw4jEFFvr6WBWVLft4jmUn9+Rgpne5QKA6AV1BO32ki7hQ8erLYEZdATe0pFGcLyq7rVx+5m00JDcNbCxfR0QmF4iA4d3kOVpYRV0Skl/oHYFfCLCQFh07qedV6HQKnTLEtov2QCqT7HUJU1wC9AmAmKWQM0QFTouAVdZjBFDFteZTvh6AotVq4wrQ+XRSOvFVrGZdOR3T3oW/IINDUOuwSQwDxkn484VFSh1qNMkUPqVMq0TM4CAAI8/FB6rRpmB8cygQJheM67+j0r2q9Dg90eoT5+GAGy2KxKJyJ8fOf9DrR6PW43NlBSuU9eKDTY6rAGzF+/lg2PWJc16tR9pKSnvtoGVAZzyfy8R1XDmuNXo+6PiUp6u5C96DG5HzLpkc8ksaR5Qo5KeruQuvAAAAg2s8Pq8VRNj0LM0F5p67a6QuxrEDgejEBMNSy06FiAgDwDp7Q4afvNJFTTbctxutlBQKyOUaK3XMTbe5AV7s6yds11chtl1nKl0TSReF4OS7B5hzQByvLyPsN9ca/N8XMNJl2HqmuIv9VXckXyJxkS6LxRvJCm+7j83YZOVpXY7FupP4BZFfCLPzz7LkWRbdcISdHqqvwzd12i0HW00Xh5FeJC5AtiZ5UYRlbbxnTI/Bu+lKb+sjOgnySf6/T+PcPpHE4kLLQavlONd0mh6ur+LJ3ks0xUvzxiXQmkmV5z2GW29jvw5NOn+7siEvAiaUZrlX6h+3QV0kcLqZes4vBsI/bfa/lCjn5p8ICu7Ms7p2XZHHdSKnV4l//UUhONjbYPT19J22xxWlky4AKMz/52KxOyfZdDABsyPua5MhabbqetZzTXIZWlhCzLD7KyDQ753jrw1obfuHKZbPwqOmicNx4Zj1ja72dy3zaqnBd7eokGRdzzT6/s+lF3hGGUqvFD6/9n032ZqxAgItPrcb7DfUYW0d75yWZLsqearrtkrUTd4hJQuQfOH5k5vvYuMQkR9ZKks9/Oq6UrYduVeJgZRnhmxrMy/nE7s4DAM2qfmRd+gpHqqt4661XqyVcDdLwFrVVTABgzTdfQqnVcn53vL7W7rxP7Wo1fl9VYfb5W7cqx1UfJxsbsLMgf1LaEFe9AUDnA+vW6opBrV3n1Oj1SLnwmc3Gq2qdDhkXczF6BGTywhz9x+HqKqd3ZHeJSTIk/5vDr+EVut3uYz5vl03YKbOhr49zDSY199yEcybtKS7C8fpazsYq9DLfRJwdGISfFF23u9OqdTq8dauScL1d+TzgWYHAKGBccBk4Rvv5jbsuTjY2IEfWOmFR4aq30WJscQ3Di7HrnJlffU7GEwua7xjB6LcVz9zJoeyMc4PRifpbx6+dAGBCX7JLOLs1GmRd+or3+2xJNDbHSJEUEgqhlxeaVf243tWFE431JkLxn8nmo6J1l7/iHY2mi8LxQowUs4OCEDBlCtrValxsbwOfCLxaWIA0UTixZZ2jVN5jNkdPF4VjZUQkwnx8UK6Q817nw+ZGHEhZaPLZ+bZWzlHQe+lLsToyihF6eaH3oRZX73WSHFkrDNOOrCgJpz/XK7MeY96trzX2hRGnNyyaJsKC0OH7u9WrICduN4Arw8O//aMQ2ZJoeAKWbM3ELIudcbOwaJoIAi8GpfIevN9QbzUQvVFQ/rep0SU39cNY1wc5IooPHS8m/stg73bxT4uuE7431dnlK8zWL+YEBWOtWIJ985Lw4xvXSHHPffzxiXSMnTsfH9VhxvJe+lLOBdctM2Oxe24ib3aDlwvy8e26jXbXywdPLjfr2L9InE9Sc8+ZLQ43q/rRMqAyuZ9yhdzsnD+ZPcfknEFCIWJi45ltsfEoV8hJjbIXW2bG8orfhRWrmCM1VWRh2DTO38X4+TNrxRLOdZFmVT/KFXJi726SK9jL41azOUaK/1n8pMmi9VqxBD+bm4QX8y9bnKp6jVZ/Z+MuMUlI12HHC0rYj+z6fcuAivMNyAoEqN6wibG0GBokFOLM8hVM03MvMFyLeG9UlPJ2bku7NwtCQpnSdRsZMccqf6m8B1e7Ou0a7uevyeIcJcwJCmaOpKZxHtM6oDK5xgDHKGvAwjrggpBQxpKYAEAky+KthYus/u7PPJ7CRR5gYX61q5MzgkC6KBxnlq/g3AHz9fbGucynGal/gGVBaRlQuSSnjjvEJCH9Xzllm5wJ3mSXcJ5qus1ZriOpaZiILQhfQ8qWRNsU0iFIKMTxxU9yfjd6m9MaryclW1w7WzY9gvPzsYuOoUIfs98cq6vB/tISwreIO1mIfH3B1bm6BzVuLyhftrdzfv5u+lKrx/7xiXTLU54v29tc4gToDjFJyP33nSAmmwEv+0TgBsdbTsyyNtt/2NuQ3kheaPM51ooljNQ/wGwxj2/ln2uUZYtdBGeDHbPo+MPYOBysLDP73cHKMpxorCdbpXHYFhuPiUxBujUadDxQk0qFHN0aDXoGBzE4pAcAaEf+HU3vBIVMOzTk8DZZpjCf8kr9A2yqp2xJNMMKBJxrcAIA+IYjtoGjcYuYJEMqkN6zjheUabvsPqa6t9fss6dmTNxkv75PydnB7e1wm2JmYuxWbbOqH90ajdXnujlGOml1OycomNk7L4lz27hdrcahW5U4dKsSWVESsmVmLJ6PkdpkHNYyoMKpptvkQpsMFQo57DGn8PGamIFmsFDIAHDoS76DY5S6Rhxl8/GZETM4DQgFAFDcc98VoxPXT3d6P3HOdCdgld1vR643XxTrN+GyqPXmHWN+SOh4Gj3n5/cHNUTk62vxfpeIwie1ft9auIgZ0OnIsboa3t/ktsmQ2ybDr8u+JW8kP847Otbo9dhTXGTxXI6G9R7e7nakTRjXKMpPYLvf2jQf7peGwBXrJ+6S/pP0/MXxYhK+x+3n04N6vVOvFzhOPyNLHE1bwqyJjCK/rSq3aADYrOrHS9euoFwhJ2MtiDV6PZZ8cZ53B4wVCDDddyqmT50KCes3vNvW0jzpHf/hBKY8bSP+N65CUC6XO339xC3Sfz5sB1E5PkQDE/KDcR0n5Bg2c01X7IXrzVLXp4RGr7frmXAt7LICASKnslZfFDoHrRFkS6KZbEk0Pm+XkRO3Gyz6JR26VYnIqSzZPTfRWN7t165wikm2JBq74mdjsSicGTudq1DIXWK/xcd1G3eYpk+dajaQ6NbYvphcx9MWvRr7+5x+09TU3jpzg4PNh+3tE4/tmxAYaD4N0ulwubPDrvrIkbWYN1LfqQhywOjDXtaKJcyZ5SuYjue3Mucyn0ZWlITzd3uKi6AZGZ3xbdO/npSMc5lPM9mSaDMxGfFEdt7b38t61huue+BCwjF9tnVRfURIuQWlwcmCQk3tbWNlRCRnx+fzy7GVDJ7t2Dcrymw+x6mm25xbz3zndhVBQiGyJdHMhRWrmLEWtgb+0dNNAODqvU5Oi1tLu1GXOzsc5vvGdd4+K7tH+0pu2lyeWYFBnNPBcoX1GcvpO0281/FqHVA59SG7Q/pPdzW1H82LPEZV+0tLbDYgy5G1krG+JcvCIzgN0wq7u2wSqxplL2/2SFeOPDVW1oFeT0rmvO/+hw95O3CIldGWPSLM5YfDt3blx+ODlNPWavFZ2+MguVrMvWP4ckG+1WP3Wghc79Xh5Hw77pD+011N7UcTybLYEZfAPcq4mGvRy7dG2UteuHKZbMj7GhvyvjZz3vvd40+AT6x+UnSd8M2lT99p4jSJB4YtLF0x8tTo9Vj8xXkS/+kZsq/kJrHUnhUcb/iAKVN4O3y7Ws0r3sfra+2Kucy1lV4q78HpO02Ea2Q13dc8In5umwz7S0vIaPFUarU4WFlmtwMp34ulVN6DF65c5rxnpVaLdZe/spijS9DrYGvC0VBTe/v40xPpzNmWZs7h5Z7iIrxdW03WiKOQPLLt2z2owY3uLjP7gFcLC7AuKhqGwDjbYuOZP9fVcHaIY3U1ONnYQDbHSJEQGAjWW4CG/j4UdnfB0uLjX5Ysc8mz3FNcZLyPQ7cqcbSuhmyOkeK56JkmznxvVpRxCuH84OHfJPFsnW/Nz8NHGZnEIJYdajWO1FTZHS4hISCQ9/x/qKogB1IWmvhmpYZN49x9NRjsLRFNx+CQHt/c7TC7L1u3nH89P4XTU/tsSzNi/36GGMKxqvU6VCkUZk6nnILCZe/gKKipvf1rABefWg2ugDmGOa+t9hKNqj4SyX63A3Nx5WpmXs4nnG8btU4He8ILfPDkcpe8KLo1GrP7N5R9pPwWn/Vrs+cYF5EXhIRyWv+2q9XIuJiLlNAw4uPtbWbkJvUPsMnsYl1UNAMUcJanVN6DNyvKsFb83eLxzvgE3gXWdrWa97sDKQtxoU1mU+ycsZ7VY9uWpVCwfKLlpXDiCIWa2tvPsvAIJn9Nlk2xMPjYHCPFE2EiZqxY3Vy7gUkJDZtQ+bi8hQ3wmZDb8vbkO1Y39F2fFHp5wZKjmiWk/gE4nJpmUu530hbz/r5U3oPC7i6Tsh9OTeP0axnkeElHsixemz2H9/xhPqY+SWvFEibdTgPA12bPwetJyYyMY12Urz6/fGoN59TH2nW4nDcHdDp4Oasju4Wpve6+25raWxOVho2bGXtN1sUsi/fSl+LM8hWc5uaRLItv121k9s5LGtfzLFv/rMWXBJ9NSpQNQYxEPtzWtiE+QhNRLF23kbHUUfnKXrpuo1mdrBVLeHeDxrIjLgG75yYyo8sz6r45jzmatoTh28I2BBofzcWVq20W/Ndmz4EhTzLXqJOvPkW+vih4Zr3N4rUjLgFH05YwczjMGkKFPmDEZz90SiL03JWrbEtj4dDRyXtkSPaaYy/i+xi851Q77D7LFXJyquk2Lt3t4FzTYAUCZEbMQHZUNF6cGWtz9HtbfFek/gHImB6BXQmzbF6ANQTVNnSYlRGRNjsGnmq6TU7faTIeuy5KgteTkpnxlJ8VCPDUjEhslcbBWlgCSwG7U0LD8PPE+cZzaPR6/HtZCbnWdc/4/eHUNIv+QqeabpMcWSuKe+7jnuYBQoRCHEpN4y2XIWD12KmV4Vm/kvCYSazZHFkrOdV0G4NDevh4eWNbbLxNQbSP19eSvzY2cE6XsqIkJtdRarX4VWmxcbokYf3w57QlDCP95GPiDNP7w6lpGG2V6BJBUV4gQ03ZjhWT+K+dlnenZUCF1gEVMbj0x/j7I3Iqy0x0JGjwrm1XD0A3RBDiI8Q0H1+PSRkxtvwx/v6Y6edvd2oRpVaLOwMq0qJSQeDFQOofMOl1oNRq4ePtbZOVco2yl9wf1EAxqEWIjxBx/oEWI9CPlw61Go2qPjKe6zAp5z91munwjrgEJAQG4oFucheCV4vFNr8xieI0IeriyZ/msKlgQrbQrISU7zVM1qUvbY547c5Ub9j0SCZdolA8Ca9oB2SCo1Ao31NB4TO48STSReF0dEKhuIOgpE6b5vE38VM7tw0pFIqDBOWJMBEzEaMpV8MKBHg+RkpHJxSKOwiKr7c3MiNmeOwNZIklrg/WRKFQhgUFALKjoj32BnbGJ9CnSKG4k6A8Gz3TI6cMYpZ1ufUthUL5DgEwbM+fFSWBp9mjZEti6BOkOIXR0fBZgQBZYolJus7j9bXkd1UVaFb1gxUIsCMuAb9NSTV+v6/kJrnWdQ95q9aamOUfrCwjF9pkOJ2RyRgSuJ2+00T+UFWBUnmP8Vz7k5KN1qodajVeKbxGcttkYAUC7J6TyOvOMLZcWWIJ/jP5ceOu6OhrDfepaPz3osXMFMYLm65cIu+mL+VMsVKj7CX/Ufat0etZ6h+AXybO/8458BeJ8z3uIb866zHa0ilO4fkrl8ixuhocSFmIHXEJyG2XoaJ3OFzizoJ88mphAbRDeuyIS0BmxAwcq6tByoXPjNkLr3XdQ2F3F5Z8cd7oLp0jayX7S0tQ2N2FXq2WAMD+0hKyNT8PdX1Kk3MlfHbWGPgq4bOzJLdNhsOpacgSS/BhcyNnxLqx5coSS3C2pdmYx3xfyU2Ta+2IS0COrNWYtbKwuwvtavMo+uUKOZl77hOcbWlGVpTEGAhsd3HRd8nSl4VHMCmhYW4VwdsStmY5o1Amg7zOuwBgdE48mrYEGr0eV7s6ycnGBuyIS8CJpRnG9ni1q5NkXMzF9oIr5Fzm04yE9UMhhsMg7Cu5SbbFxmN0lLXZgUFMt0aDg5VlyIqS4MKK73I5lSvkJPn8p8jO+5rceGY9o9bpkC4Kx+65iczuUSOo0eTIWsnJxgYTL2Rg2HdIOzSEq12dZCQBmsm13k1fiv6HD1Hb10uA4XARp+80kdGxoJd8cR4AcGfTi8zotLgdarVp+II/LUr3mAfsDpHzKd8f3hvJ+cv87X2yr+QmAYaTh/++qsLQEU1ebsvCI5h0UThyZMNxYNV6HcQsi8OpaTh0qxLJ5z9FuigchnAJvt7expHB2CTsC0JCmc0xUqMX8IGUhSjs7oLfhyeJIRTo2J3O31aVY0T4zOLgiHx9jXmo/7okw+R7X29vkzAjPykqwK7rV5FxMRdXuzqJUquFWqfDgZSFZjm2I1nWVFCWhUfwxmtwN9whWBPl+8O22HjmXObTkPoH4NCtSsT+/QwBhrP8cXVoAAgf4/Wt0Gqxe26iMa7NjWfWM3GjLNUNYRqCp5h7Rcf4D3febo0GryclM4dT06DW6bCnuAjrLptHIbSWvO3+SEJ3a57pr82eg54XtzEA8HZNtTFQk4gnc6BZgKWxiuWOpIvCzdSRQnE02ZJopum5F5gPnlyOZlU/cmSt5F/mzAUAs0DgGr0eObJWY0S5nsFBY2yVM8tXMGXrnwUAVCkUxmM2zxwWmrduVZoJxNGRxWBDUO3dcxMZsn0Xs3deEnLbZPi8XWZyjCGcJFcQbADYMjMWAKxmOngueiZ8vb0h9Q+ATD1gFKB367mzRpiZyIp8ffHBk8vx0rUrbvtgX46jticU57Ih72siZv3wi8T5xhdu5wM1siXRjNQ/gLxaWICG/j6SGTEDbQMDxuDPn2Y+xTliGLv+1zKgwoKQUCZdFE4OVpZBrh0k66Ik6Hv4EHuLi6DW6ZC7chV8vb2x+Ivz5IUYKbbFxjMDIyIlHpO4a9+8JOZEYz3Zmp+Hkp77JDNiBnRDBL8p/xZrxRIcSFnI/LrsW7K/tATtajVZNzIzebOiDCsjIvHjWbMZAMQwkrmneWA894GUhdhfWoLHL3xGfp44H4FTpiCv8y4+am6EgG94d727y6UJo/lgBQLenDUUiqNYNE2E/aUlOFZXQ4DhOL3b4xIYAChdt5H58Y1r5NCtShii4Uv9A/BO2mKjcPhYsebu1WpJjB+YG8+sZ3YW5JNjdTXGANysQICPMjKNNlcS1g97iouwp7iIAMPZDccKVJBQiIJn1jNb8vNMysUKBPjNgsdhKPf2gism1wKAXyUuMCtfiFCI4JEt8NeTkhnWW0D2FBdha36eycyBIYR/xLPu8lduFytlc4wUZ5avoIJCcTpKrRYVvXISOEXIucPYrdGgtq+XcEW361CroXyoJWM/79ZocH9QQ6T+ASb2KdauZYiqFu3nz1ib/ht+a63co79XarXoeKA2lqtlJPD12GuVK+Sk76EW84NDmSCh0LKgAMDiL87bldDI0bhDbFoKhcKN1aj3N55Z7zY7P6xAQMWEQvFkQQGACytWMTvcYCF0B12MpVA8X1AA4MTSDMZg3OMqqKk9hfKICAownLqwesMmuGIKRE3tKZRHTFAAYE5QMHNhxSrmgyeXjzsN5HigpvYUivtjdZfHGsfra8m79bVwtFNh+/NbHZLUiEKhuJGgGPi8XUbO3GnG2ZZmm5Jh28NYj0gKhfKIC4oBpVaLK/c6ydWuTt78u/Yg9Q9A0dpsxuWJ1ikUivMFZSwGK72a3l409PehRaWCTD2AQb0evVottEN6KEaC0IQIhRB6eWP61KkI9/XFomki/GxuEkODUFMoVFAoFMr3DC9aBRQKhQoKhUKhgkKhUB5d/h+bGztka/6v/gAAAABJRU5ErkJggg==" alt="Consalud"
+          onerror="this.style.display='none';document.getElementById('fb-cs').style.display='flex'">
+        <div id="fb-cs" class="logo-fallback fb-cs" style="display:none">CS</div>
+      </div>
+      <div class="card-nm">Consalud</div>
+      <div class="card-tg">Control consolidado de telefonía móvil y fija, datos, SMS e impresión.</div>
+      <a class="open" href="https://portal.efika.cl" target="_blank">INGRESAR</a>
+    </div>
+
+    <!-- CINÉPOLIS -->
+    <div class="card">
+      <div class="card-logo-area">
+        <img src="https://efika.cl/wp-content/uploads/2022/03/CINEPOLIS.jpg" alt="Cinépolis"
+          onerror="this.style.display='none';document.getElementById('fb-cn').style.display='flex'">
+        <div id="fb-cn" class="logo-fallback fb-cn" style="display:none">CN</div>
+      </div>
+      <div class="card-nm">Cin&eacute;polis</div>
+      <div class="card-tg">Control consolidado de servicios TIC — telefonía, datos y gestión tecnológica.</div>
+      <a class="open" href="https://efika-cinepolis-portal.pages.dev" target="_blank">INGRESAR</a>
+    </div>
+
+    <!-- BICE VIDA -->
+    <div class="card">
+      <div class="card-logo-area">
+        <img src="https://efika.cl/wp-content/uploads/2023/02/BICE-VIDA-1.jpg" alt="Bice Vida"
+          onerror="this.style.display='none';document.getElementById('fb-bv').style.display='flex'">
+        <div id="fb-bv" class="logo-fallback fb-bv" style="display:none">BV</div>
+      </div>
+      <div class="card-nm">Bice Vida</div>
+      <div class="card-tg">Gestión y control de servicios de telefonía e infraestructura TIC.</div>
+      <a class="open" href="https://efika-bicevida-portal.pages.dev" target="_blank">INGRESAR</a>
+    </div>
+
+    <!-- AFP HABITAT -->
+    <div class="card">
+      <div class="card-logo-area">
+        <img src="https://www.afphabitat.cl/wp-content/uploads/2022/10/logo_nuevo_afphabitat_full.svg" alt="AFP Habitat"
+          onerror="this.style.display='none';document.getElementById('fb-ah').style.display='flex'">
+        <div id="fb-ah" class="logo-fallback fb-ah" style="display:none">AH</div>
+      </div>
+      <div class="card-nm">AFP H&aacute;bitat</div>
+      <div class="card-tg">Optimización y control de servicios TIC corporativos.</div>
+      <a class="open" href="https://efika-afphabitat-portal.pages.dev" target="_blank">INGRESAR</a>
+    </div>
+
+    <!-- PUCV -->
+    <div class="card">
+      <div class="card-logo-area">
+        <img src="https://efika.cl/wp-content/uploads/2022/02/PUCV.jpg" alt="PUCV"
+          onerror="this.style.display='none';document.getElementById('fb-pv').style.display='flex'">
+        <div id="fb-pv" class="logo-fallback fb-pv" style="display:none">PV</div>
+      </div>
+      <div class="card-nm">PUCV</div>
+      <div class="card-tg">Pontificia Universidad Católica de Valparaíso — gestión de servicios TIC universitarios.</div>
+      <a class="open" href="https://efika-pucv-portal.pages.dev" target="_blank">INGRESAR</a>
+    </div>
+
+  </div>
+
+  <div class="foot">EFIKA &copy; 2026 &mdash; Consultor&iacute;a y plataforma de gesti&oacute;n de servicios TIC</div>
+</div>
+
+<script>
+const U={'efika':'Efika2026','ignacio':'Efika2026','admin':'Efika2026'};
+function login(){
+  const u=document.getElementById('u').value.trim().toLowerCase();
+  const p=document.getElementById('p').value;
+  if(U[u]&&U[u]===p){
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('who').textContent=u.charAt(0).toUpperCase()+u.slice(1);
+  } else {
+    document.getElementById('err').style.display='block';
+  }
+}
+function logout(){location.reload();}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+</script>
+</body></html>
