@@ -1,58 +1,50 @@
-// AUTO-GENERADO por sync_data.py — 30/06/2026 22:20
-// No editar manualmente. Ejecutar: python sync_data.py
+// Auto-generado por sync_data.py — 20/07/2026 21:16
+// Fuente: SharePoint EFIKA → Control Consolidado Servicios.xlsx
 const PORTAL_DATA = {
   "kpis": {
-    "totalAhorro": 1234112357,
+    "totalAhorro": 1578670000,
     "iniciConsultoria": "Junio 2022",
     "promMensual": 41.03,
-    "mesesGestion": 47,
     "factGestionadas": 1700,
     "privados": {
       "ahorro": 734708161,
-      "lb": 63512363,
-      "factTotal": 2042408336,
       "pctAhorro": 43.97,
-      "inicio": "Noviembre 2022",
-      "termino": "Octubre 2025",
-      "cuota": "36 / 36",
-      "nFacturas": 695
+      "lineaBase": 63512363,
+      "facturacion": 2042408336,
+      "cuotaActual": 36,
+      "cuotaTotal": 36
     },
     "moviles": {
       "ahorro": 174558177,
-      "lb": 5608874,
-      "factTotal": 111026179,
       "pctAhorro": 66.22,
-      "inicio": "Noviembre 2022",
-      "termino": "Octubre 2025",
-      "cuota": "36 / 36",
-      "nFacturas": 454
+      "lineaBase": 5608874,
+      "facturacion": 111026179,
+      "cuotaActual": 36,
+      "cuotaTotal": 36
     },
     "sms": {
       "ahorro": 112255502,
-      "lb": null,
-      "factTotal": 334952933,
       "pctAhorro": 16.27,
-      "inicio": "Noviembre 2022",
-      "termino": "Octubre 2025",
-      "cuota": "36 / 36",
-      "nFacturas": 95
+      "lineaBase": null,
+      "facturacion": 334952933,
+      "cuotaActual": 36,
+      "cuotaTotal": 36
     },
     "fija": {
       "ahorro": 49720126,
-      "lb": 5530474,
-      "factTotal": 45796690,
       "pctAhorro": 35.83,
-      "inicio": "Noviembre 2022",
-      "termino": "Octubre 2025",
-      "cuota": "36 / 36",
-      "nFacturas": 428
+      "lineaBase": 5530474,
+      "facturacion": 45796690,
+      "cuotaActual": 36,
+      "cuotaTotal": 36
     },
     "otras": {
-      "totalpack": 16909163,
+      "totalPack": 16909163,
       "medical": 59988360,
       "microsoft": 132077360
     },
-    "updatedAt": "30/06/2026 22:20"
+    "updatedAt": "20/07/2026 21:16",
+    "mesesGestion": 49
   },
   "monthly": [
     {
@@ -68,462 +60,482 @@ const PORTAL_DATA = {
     {
       "m": "Jul 22",
       "mv": 2.7,
-      "sms": 4.37,
+      "sms": 4.09,
       "pv": 8.26,
       "med": 0.0,
       "ms": 0.0,
       "fi": 1.17,
-      "total": 16.51
+      "total": 16.23
     },
     {
       "m": "Aug 22",
       "mv": 4.53,
-      "sms": 3.15,
+      "sms": 5.43,
       "pv": 4.73,
       "med": 0.0,
       "ms": 0.0,
       "fi": 1.58,
-      "total": 13.99
+      "total": 16.26
     },
     {
       "m": "Sep 22",
       "mv": 3.92,
-      "sms": 5.35,
+      "sms": 3.86,
       "pv": 4.85,
       "med": 0.0,
       "ms": 0.0,
       "fi": 1.56,
-      "total": 15.69
+      "total": 14.2
     },
     {
       "m": "Oct 22",
       "mv": 4.6,
-      "sms": 5.25,
+      "sms": 3.89,
       "pv": 7.87,
       "med": 0.0,
       "ms": 0.0,
       "fi": 1.11,
-      "total": 18.83
+      "total": 17.46
     },
     {
       "m": "Nov 22",
       "mv": 4.02,
-      "sms": 2.73,
+      "sms": 5.58,
       "pv": 10.94,
       "med": 0.0,
       "ms": 0.0,
       "fi": 1.59,
-      "total": 19.28
+      "total": 22.12
     },
     {
       "m": "Dec 22",
       "mv": 3.89,
-      "sms": 5.82,
+      "sms": 3.84,
       "pv": 11.14,
       "med": 0.0,
       "ms": 0.0,
       "fi": 1.74,
-      "total": 22.59
+      "total": 20.61
     },
     {
       "m": "Jan 23",
       "mv": 4.06,
-      "sms": 9.37,
+      "sms": 2.87,
       "pv": 11.36,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.67,
-      "total": 39.29
+      "total": 32.79
     },
     {
       "m": "Feb 23",
       "mv": 3.8,
-      "sms": 7.18,
+      "sms": 3.42,
       "pv": 14.62,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.18,
-      "total": 39.59
+      "total": 35.84
     },
     {
       "m": "Mar 23",
       "mv": 3.87,
-      "sms": 6.78,
+      "sms": 3.52,
       "pv": 15.97,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.66,
-      "total": 41.1
+      "total": 37.84
     },
     {
       "m": "Apr 23",
       "mv": 4.04,
-      "sms": 8.94,
+      "sms": 1.87,
       "pv": 15.84,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.26,
-      "total": 42.9
+      "total": 35.83
     },
     {
       "m": "May 23",
       "mv": 4.0,
-      "sms": 7.92,
+      "sms": 2.01,
       "pv": 14.38,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.53,
-      "total": 40.65
+      "total": 34.74
     },
     {
       "m": "Jun 23",
       "mv": 4.01,
-      "sms": 10.34,
+      "sms": 1.69,
       "pv": 15.41,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.46,
-      "total": 44.04
+      "total": 35.38
     },
     {
       "m": "Jul 23",
       "mv": 4.15,
-      "sms": 10.81,
+      "sms": 1.62,
       "pv": 15.43,
       "med": 5.0,
       "ms": 6.95,
       "fi": 0.43,
-      "total": 43.63
+      "total": 34.44
     },
     {
       "m": "Aug 23",
       "mv": 4.56,
-      "sms": 9.24,
+      "sms": 1.84,
       "pv": 15.28,
       "med": 5.0,
       "ms": 6.95,
       "fi": 0.45,
-      "total": 42.35
+      "total": 34.94
     },
     {
       "m": "Sep 23",
       "mv": 4.04,
-      "sms": 11.09,
+      "sms": 1.59,
       "pv": 15.41,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.42,
-      "total": 44.78
+      "total": 35.27
     },
     {
       "m": "Oct 23",
       "mv": 3.79,
-      "sms": 9.59,
+      "sms": 1.79,
       "pv": 15.39,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.42,
-      "total": 43.0
+      "total": 35.21
     },
     {
       "m": "Nov 23",
       "mv": 3.84,
-      "sms": 9.88,
+      "sms": 1.76,
       "pv": 15.54,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.57,
-      "total": 43.64
+      "total": 35.52
     },
     {
       "m": "Dec 23",
       "mv": 3.94,
-      "sms": 9.71,
+      "sms": 1.78,
       "pv": 15.56,
       "med": 5.0,
       "ms": 6.95,
       "fi": 1.35,
-      "total": 43.38
+      "total": 35.44
     },
     {
       "m": "Jan 24",
       "mv": 4.02,
-      "sms": 12.95,
+      "sms": 1.34,
       "pv": 15.86,
       "med": 0.0,
       "ms": 6.95,
       "fi": 1.35,
-      "total": 42.05
+      "total": 30.44
     },
     {
       "m": "Feb 24",
       "mv": 4.13,
-      "sms": 13.83,
+      "sms": 1.22,
       "pv": 13.89,
       "med": 0.0,
       "ms": 6.95,
       "fi": 1.36,
-      "total": 41.09
+      "total": 28.48
     },
     {
       "m": "Mar 24",
       "mv": 4.65,
-      "sms": 13.22,
+      "sms": 1.31,
       "pv": 15.12,
       "med": 0.0,
       "ms": 6.95,
       "fi": 1.54,
-      "total": 42.42
+      "total": 30.5
     },
     {
       "m": "Apr 24",
       "mv": 4.68,
-      "sms": 12.67,
+      "sms": 1.39,
       "pv": 14.91,
       "med": 0.0,
       "ms": 6.95,
       "fi": 1.52,
-      "total": 41.65
+      "total": 30.37
     },
     {
       "m": "May 24",
       "mv": 4.86,
-      "sms": 12.56,
+      "sms": 1.4,
       "pv": 15.28,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.45,
-      "total": 43.03
+      "total": 31.87
     },
     {
       "m": "Jun 24",
       "mv": 5.02,
-      "sms": 13.02,
+      "sms": 1.34,
       "pv": 15.92,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.23,
-      "total": 44.07
+      "total": 32.39
     },
     {
       "m": "Jul 24",
       "mv": 5.04,
-      "sms": 12.12,
+      "sms": 1.47,
       "pv": 15.94,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.25,
-      "total": 43.21
+      "total": 32.57
     },
     {
       "m": "Aug 24",
       "mv": 5.02,
-      "sms": 12.31,
+      "sms": 1.44,
       "pv": 16.1,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.25,
-      "total": 42.62
+      "total": 31.76
     },
     {
       "m": "Sep 24",
       "mv": 5.03,
-      "sms": 14.21,
+      "sms": 2.7,
       "pv": 16.26,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.24,
-      "total": 44.7
+      "total": 33.18
     },
     {
       "m": "Oct 24",
       "mv": 5.02,
-      "sms": 13.55,
+      "sms": 3.01,
       "pv": 16.01,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.24,
-      "total": 43.78
+      "total": 33.24
     },
     {
       "m": "Nov 24",
       "mv": 5.11,
-      "sms": 13.89,
+      "sms": 2.86,
       "pv": 15.99,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.23,
-      "total": 44.17
+      "total": 33.13
     },
     {
       "m": "Dec 24",
       "mv": 5.08,
-      "sms": 14.14,
+      "sms": 2.74,
       "pv": 16.14,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.22,
-      "total": 44.53
+      "total": 33.13
     },
     {
       "m": "Jan 25",
       "mv": 5.14,
-      "sms": 14.4,
+      "sms": 2.62,
       "pv": 16.28,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.22,
-      "total": 44.99
+      "total": 33.21
     },
     {
       "m": "Feb 25",
       "mv": 5.11,
-      "sms": 15.51,
+      "sms": 2.1,
       "pv": 15.9,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.23,
-      "total": 45.7
+      "total": 32.29
     },
     {
       "m": "Mar 25",
       "mv": 4.83,
-      "sms": 14.63,
+      "sms": 2.52,
       "pv": 16.29,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.18,
-      "total": 44.88
+      "total": 32.77
     },
     {
       "m": "Apr 25",
       "mv": 5.05,
-      "sms": 14.62,
+      "sms": 2.52,
       "pv": 16.5,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.23,
-      "total": 45.35
+      "total": 33.25
     },
     {
       "m": "May 25",
       "mv": 5.02,
-      "sms": 14.45,
+      "sms": 2.61,
       "pv": 16.55,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.22,
-      "total": 45.2
+      "total": 33.35
     },
     {
       "m": "Jun 25",
       "mv": 4.99,
-      "sms": 14.07,
+      "sms": 2.79,
       "pv": 16.62,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.22,
-      "total": 44.86
+      "total": 33.58
     },
     {
       "m": "Jul 25",
       "mv": 4.99,
-      "sms": 13.93,
+      "sms": 2.86,
       "pv": 16.51,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.22,
-      "total": 44.6
+      "total": 33.53
     },
     {
       "m": "Aug 25",
       "mv": 5.06,
-      "sms": 14.82,
+      "sms": 2.44,
       "pv": 16.98,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.22,
-      "total": 46.04
+      "total": 33.66
     },
     {
       "m": "Sep 25",
       "mv": 5.16,
-      "sms": 14.59,
+      "sms": 2.55,
       "pv": 16.98,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.05,
-      "total": 45.73
+      "total": 33.68
     },
     {
       "m": "Oct 25",
       "mv": 4.84,
-      "sms": 13.93,
+      "sms": 2.86,
       "pv": 24.29,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.2,
-      "total": 52.21
+      "total": 41.15
     },
     {
       "m": "Nov 25",
       "mv": 5.1,
-      "sms": 14.88,
+      "sms": 2.41,
       "pv": 24.31,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.19,
-      "total": 53.43
+      "total": 40.96
     },
     {
       "m": "Dec 25",
       "mv": 5.16,
-      "sms": 14.81,
+      "sms": 2.45,
       "pv": 24.39,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.2,
-      "total": 53.51
+      "total": 41.14
     },
     {
       "m": "Jan 26",
       "mv": 5.03,
-      "sms": 14.69,
+      "sms": 2.5,
       "pv": 24.38,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.2,
-      "total": 53.26
+      "total": 41.07
     },
     {
       "m": "Feb 26",
       "mv": 4.96,
-      "sms": 15.64,
+      "sms": 2.06,
       "pv": 24.29,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.2,
-      "total": 54.04
+      "total": 40.46
     },
     {
       "m": "Mar 26",
       "mv": 4.96,
-      "sms": 15.07,
+      "sms": 2.33,
       "pv": 24.62,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.2,
-      "total": 53.8
+      "total": 41.05
     },
     {
       "m": "Apr 26",
       "mv": 5.15,
-      "sms": 14.69,
+      "sms": 2.51,
       "pv": 24.42,
       "med": 0.0,
       "ms": 6.95,
       "fi": 2.19,
-      "total": 53.4
+      "total": 41.23
+    },
+    {
+      "m": "May 26",
+      "mv": 4.23,
+      "sms": 1.58,
+      "pv": 25.83,
+      "med": 0.0,
+      "ms": 6.95,
+      "fi": 2.19,
+      "total": 40.78
+    },
+    {
+      "m": "Jun 26",
+      "mv": 4.24,
+      "sms": 0.0,
+      "pv": 25.77,
+      "med": 0.0,
+      "ms": 6.95,
+      "fi": 0.0,
+      "total": 36.96
     }
   ]
 };
