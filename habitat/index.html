@@ -1583,7 +1583,7 @@ function chatAnswer(q) {
   var VEND=[/BEMOBI/gi,/TIAXA/gi,/GTD Telecom/gi,/\bGTD\b/g,/Movifonos/gi,/Kyocera/gi,/Totalpack/gi,/TotalPack/g,/Seguridad Medical/gi];
   function getD(){ try{ if(typeof D!=='undefined'&&D) return D; }catch(e){} try{ if(typeof PORTAL_DATA!=='undefined') return PORTAL_DATA; }catch(e){} return null; }
   function isEmpty(d,keys){ if(!d) return false; return keys.every(function(k){ var v=d[k]; return !v || (v.length!==undefined && v.length===0); }); }
-  function rm(id){ var n=document.getElementById('ni-'+id); if(n&&n.remove)n.remove(); var p=document.getElementById('pg-'+id); if(p&&p.remove)p.remove(); }
+  function rm(id){ var n=document.getElementById('ni-'+id); if(n)n.style.display='none'; var p=document.getElementById('pg-'+id); if(p)p.style.display='none'; }
   function scrub(){
     try{
       var d=getD();
@@ -1595,7 +1595,9 @@ function chatAnswer(q) {
       nodes.forEach(function(nd){ var s=nd.nodeValue; VEND.forEach(function(re){ s=s.replace(re,''); }); s=s.replace(/\(\s*[\/,]?\s*\)/g,'').replace(/\s{2,}/g,' '); nd.nodeValue=s; });
     }catch(e){}
   }
-  if(document.readyState!=='loading') scrub(); else document.addEventListener('DOMContentLoaded',scrub);
+  function safeInit(){ try{ if(typeof initApp==='function') initApp(); }catch(e){} }
+  function run(){ safeInit(); scrub(); }
+  if(document.readyState!=='loading') run(); else document.addEventListener('DOMContentLoaded',run);
   document.addEventListener('click',function(){ setTimeout(scrub,120); });
   setTimeout(scrub,600); setTimeout(scrub,1600); setTimeout(scrub,3000);
 })();
