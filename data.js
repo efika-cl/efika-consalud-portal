@@ -1,4 +1,4 @@
-// Auto-generado por sync_data.py — 30/07/2026 23:12
+// Auto-generado por sync_data.py — 31/07/2026 03:33
 // Fuente: SharePoint EFIKA → Control Consolidado Servicios.xlsx
 const PORTAL_DATA = {
   "kpis": {
@@ -43,7 +43,7 @@ const PORTAL_DATA = {
       "medical": 59988360,
       "microsoft": 132077360
     },
-    "updatedAt": "30/07/2026 23:12",
+    "updatedAt": "31/07/2026 03:33",
     "mesesGestion": 50
   },
   "monthly": [
