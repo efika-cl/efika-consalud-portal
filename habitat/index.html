@@ -1629,7 +1629,7 @@ function chatAnswer(q) {
         var esAhorro=base>0, val=esAhorro?base:sum(arr,function(r){return r.net;});
         html+=card(s.c||'kg', s.n, clp(val), (esAhorro?'Ahorro acumulado':'Facturación acumulada')+' · '+arr.length+' fact.');
       });
-      el.innerHTML=html;
+      el.innerHTML=html; el.dataset.efika='1';
     }catch(e){}
   }
   function hideParque(){
@@ -1642,9 +1642,18 @@ function chatAnswer(q) {
     }catch(e){}
   }
   function run(){ fix(); hideParque(); }
-  if(document.readyState!=='loading') setTimeout(run,500); else document.addEventListener('DOMContentLoaded',function(){setTimeout(run,500);});
+  // re-aplicar si el portal vuelve a dibujar los KPIs
+  function watch(){
+    try{
+      var el=document.getElementById('kpiMain'); if(!el) return;
+      new MutationObserver(function(){ if(el.dataset.efika!=='1'){ run(); } }).observe(el,{childList:true});
+    }catch(e){}
+  }
+  try{ if(typeof initApp==='function'){ var _o=initApp; window.initApp=function(){ var r=_o.apply(this,arguments); setTimeout(run,80); return r; }; } }catch(e){}
+  if(document.readyState!=='loading'){ setTimeout(function(){run();watch();},500); }
+  else document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){run();watch();},500);});
   document.addEventListener('click',function(){ setTimeout(run,350); });
-  setTimeout(run,1400); setTimeout(run,2800);
+  setTimeout(function(){run();watch();},1400); setTimeout(run,2800); setTimeout(run,4500);
 })();
 </script>
 </body>
