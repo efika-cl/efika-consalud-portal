@@ -1601,59 +1601,57 @@ function chatAnswer(q) {
   setTimeout(scrub,600); setTimeout(scrub,1600); setTimeout(scrub,3000);
 })();
 </script>
+
+
+
+
 <script>window.__EFIKA_KPI__={modo:'facturacion',servicios:[
-  {k:'fija',n:'Telefonía Fija · OPS',c:'kb'}]};</script>
+  {n:'Telefonía Fija · OPS',k:'fija',c:'kb'}]};</script>
 <script>
-/* EFIKA — KPIs por servicio real del cliente + ocultar bloques que no aplican */
+/* EFIKA KPI v3 - totales por servicio real (resumen, facturas o diferencia) */
 (function(){
-  var CFG = window.__EFIKA_KPI__ || null;   // definido por cada portal
-  function sum(a,f){ var t=0; (a||[]).forEach(function(r){ t+=(+f(r)||0); }); return t; }
-  function clp(n){ if(!n) return '$0'; var m=n/1e6; return m>=1? '$'+(m>=100?Math.round(m):m.toFixed(1))+'M' : '$'+Math.round(n).toLocaleString('es-CL'); }
-  function card(cls,lbl,val,sub){ return '<div class="kp '+cls+'"><div class="kp-label">'+lbl+'</div><div class="kp-v">'+val+'</div><div class="kp-sub">'+sub+'</div></div>'; }
-  function fix(){
-    try{
-      if(!CFG) return;
-      var d=(typeof D!=='undefined'&&D)?D:null; if(!d) return;
-      var el=document.getElementById('kpiMain'); if(!el) return;
-      var R=d.resumen||[], tot=sum(R,function(r){return r.total;});
-      var html='';
-      if(CFG.modo==='ahorro'){
-        html+=card('kt','Ahorro Acumulado Total',clp(tot),R.length+' meses gestionados');
-        html+=card('kb','Promedio Mensual',clp(R.length?tot/R.length:0),'Sobre '+R.length+' meses');
-      }else{
-        html+=card('kt','Facturación Acumulada',clp(tot),R.length+' meses gestionados');
-        html+=card('kb','Promedio Mensual',clp(R.length?tot/R.length:0),'Sobre '+R.length+' meses');
-      }
-      CFG.servicios.forEach(function(s){
-        var arr=d[s.k]||[], base=sum(arr,function(r){return r.ah;});
-        var esAhorro=base>0, val=esAhorro?base:sum(arr,function(r){return r.net;});
-        html+=card(s.c||'kg', s.n, clp(val), (esAhorro?'Ahorro acumulado':'Facturación acumulada')+' · '+arr.length+' fact.');
-      });
-      el.innerHTML=html; el.dataset.efika='1';
-    }catch(e){}
+  var LAST='';
+  function sum(a,f){var t=0;(a||[]).forEach(function(r){t+=(+f(r)||0);});return t;}
+  function clp(n){ n=Math.round(n||0); if(!n) return '$0'; var m=n/1e6;
+    return m>=1 ? '$'+(m>=100?Math.round(m):m.toFixed(1))+'M' : '$'+n.toLocaleString('es-CL'); }
+  function card(c,l,v,s){ return '<div class="kp '+c+'"><div class="kp-label">'+l+'</div><div class="kp-v">'+v+'</div><div class="kp-sub">'+s+'</div></div>'; }
+  function build(){
+    var CFG=window.__EFIKA_KPI__; if(!CFG) return null;
+    var d=(typeof D!=='undefined'&&D)?D:null; if(!d) return null;
+    var R=d.resumen||[]; if(!R.length) return null;
+    var tot=sum(R,function(r){return r.total;}), esA=CFG.modo==='ahorro';
+    var S=CFG.servicios||[], vals=[], subs=[], restoIdx=-1, acc=0;
+    S.forEach(function(s,i){
+      if(s.resto){ vals.push(0); subs.push('Ahorro acumulado'); restoIdx=i; return; }
+      var v=0, sub='';
+      if(s.rk){ v=sum(R,function(r){return r[s.rk];}); sub='Ahorro acumulado'; }
+      else{ var arr=d[s.k]||[], ah=sum(arr,function(r){return r.ah;});
+        if(ah>0){ v=ah; sub='Ahorro acumulado · '+arr.length+' fact.'; }
+        else{ v=sum(arr,function(r){return r.net;}); sub='Facturación acumulada · '+arr.length+' fact.'; } }
+      vals.push(v); subs.push(sub); acc+=v;
+    });
+    if(restoIdx>=0){ var arr2=d[S[restoIdx].k]||[]; vals[restoIdx]=Math.max(0,tot-acc);
+      subs[restoIdx]='Ahorro acumulado · '+arr2.length+' fact.'; }
+    var h=card('kt', esA?'Ahorro Acumulado Total':'Facturación Acumulada', clp(tot), R.length+' meses gestionados');
+    h+=card('kb','Promedio Mensual', clp(R.length?tot/R.length:0), 'Sobre '+R.length+' meses');
+    S.forEach(function(s,i){ h+=card(s.c||'kg', s.n, clp(vals[i]), subs[i]); });
+    return h;
   }
-  function hideParque(){
-    try{
-      ['kpiParque','wrapAlertaParque'].forEach(function(id){var n=document.getElementById(id); if(n) n.style.display='none';});
-      document.querySelectorAll('.tbl-title').forEach(function(t){
-        var s=(t.textContent||'').toLowerCase();
-        if(s.indexOf('parque')>-1||s.indexOf('inventario')>-1){ var w=t.closest('.tbl-wrap'); if(w) w.style.display='none'; }
-      });
-    }catch(e){}
-  }
+  function fix(){ try{ var el=document.getElementById('kpiMain'); if(!el) return;
+    var h=build(); if(!h) return; if(el.innerHTML!==h){ el.innerHTML=h; LAST=h; } }catch(e){} }
+  function hideParque(){ try{
+      ['kpiParque','wrapAlertaParque'].forEach(function(id){var n=document.getElementById(id); if(n)n.style.display='none';});
+      document.querySelectorAll('.tbl-title').forEach(function(t){ var s=(t.textContent||'').toLowerCase();
+        if(s.indexOf('parque')>-1||s.indexOf('inventario')>-1){ var w=t.closest('.tbl-wrap'); if(w)w.style.display='none'; } });
+    }catch(e){} }
   function run(){ fix(); hideParque(); }
-  // re-aplicar si el portal vuelve a dibujar los KPIs
-  function watch(){
-    try{
-      var el=document.getElementById('kpiMain'); if(!el) return;
-      new MutationObserver(function(){ if(el.dataset.efika!=='1'){ run(); } }).observe(el,{childList:true});
-    }catch(e){}
-  }
+  function watch(){ try{ var el=document.getElementById('kpiMain'); if(!el) return;
+      new MutationObserver(function(){ if(el.innerHTML!==LAST) run(); }).observe(el,{childList:true}); }catch(e){} }
   try{ if(typeof initApp==='function'){ var _o=initApp; window.initApp=function(){ var r=_o.apply(this,arguments); setTimeout(run,80); return r; }; } }catch(e){}
-  if(document.readyState!=='loading'){ setTimeout(function(){run();watch();},500); }
-  else document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){run();watch();},500);});
-  document.addEventListener('click',function(){ setTimeout(run,350); });
-  setTimeout(function(){run();watch();},1400); setTimeout(run,2800); setTimeout(run,4500);
+  if(document.readyState!=='loading') setTimeout(function(){run();watch();},400);
+  else document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){run();watch();},400);});
+  document.addEventListener('click',function(){ setTimeout(run,300); });
+  [1200,2500,4200].forEach(function(t){ setTimeout(function(){run();watch();},t); });
 })();
 </script>
 </body>
