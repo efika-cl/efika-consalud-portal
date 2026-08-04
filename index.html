@@ -609,5 +609,91 @@ function initCharts(){
   gauge('gPv',43.97);gauge('gMv',66.22);gauge('gSms',16.27);gauge('gFj',35.83);
 }
 </script>
+
+<script>
+/* EFIKA — Hidratacion de tablas Consalud desde data.js (SharePoint) */
+(function(){
+  function D(){ return (typeof PORTAL_DATA!=='undefined'&&PORTAL_DATA)?PORTAL_DATA:null; }
+  function clp(n){ n=Math.round(+n||0); return '$'+n.toLocaleString('es-CL'); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function cut(s,n){ s=String(s==null?'':s); return s.length>n ? s.slice(0,n)+'…' : s; }
+  /* orden descendente por fecha dd/mm/aaaa */
+  function ord(a,b){
+    function k(r){ var f=String(r.f||r.fe||''); var p=f.split('/');
+      return p.length===3 ? p[2]+p[1].padStart(2,'0')+p[0].padStart(2,'0') : '0'; }
+    return k(b).localeCompare(k(a));
+  }
+  /* localiza el bloque .tc cuyo <h3> contiene txt, dentro de la pagina pgId */
+  function tabla(pgId, txt){
+    var pg=document.getElementById(pgId); if(!pg) return null;
+    var tcs=pg.querySelectorAll('.tc');
+    for(var i=0;i<tcs.length;i++){
+      var h=tcs[i].querySelector('h3');
+      if(h && h.textContent.toLowerCase().indexOf(txt.toLowerCase())>-1) return tcs[i];
+    }
+    return null;
+  }
+  function pintar(pgId, tituloTabla, arr, render, etiqueta){
+    var tc=tabla(pgId, tituloTabla); if(!tc||!arr) return;
+    var tb=tc.querySelector('tbody'); if(!tb) return;
+    var rows=arr.slice().sort(ord);
+    tb.innerHTML = rows.length
+      ? rows.map(render).join('')
+      : '<tr><td colspan="9" style="text-align:center;color:rgba(255,255,255,.4);padding:16px">Sin registros</td></tr>';
+    var ba=tc.querySelector('.ba');
+    if(ba) ba.textContent = rows.length + ' ' + (etiqueta||'facturas');
+    /* scroll interno para listados largos */
+    var tw=tc.querySelector('table');
+    if(tw && rows.length>12 && !tw.parentNode.classList.contains('tscroll')){
+      var box=document.createElement('div');
+      box.className='tscroll';
+      box.style.cssText='max-height:420px;overflow-y:auto';
+      tw.parentNode.insertBefore(box, tw); box.appendChild(tw);
+      var th=tc.querySelector('thead');
+      if(th) th.querySelectorAll('th').forEach(function(x){
+        x.style.position='sticky'; x.style.top='0'; x.style.zIndex='2'; x.style.background='#0d2430'; });
+    }
+  }
+  function run(){
+    var d=D(); if(!d) return;
+    /* SERVICIOS PRIVADOS */
+    pintar('pg-pv','Control de Facturación', d.privados, function(r){
+      return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr)+'</td><td>'+esc(r.fo)+
+             '</td><td title="'+esc(r.desc)+'">'+esc(cut(r.desc,55))+
+             '</td><td class="tr">'+clp(r.net)+'</td></tr>'; });
+    /* SERVICIOS MOVILES */
+    pintar('pg-mv','Control de Facturación', d.moviles, function(r){
+      return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr)+'</td><td>'+esc(r.fo)+
+             '</td><td title="'+esc(r.tipo)+'">'+esc(cut(r.tipo,55))+
+             '</td><td class="tr">'+clp(r.net)+'</td></tr>'; });
+    /* SMS */
+    pintar('pg-sms','Control de Facturación', d.sms, function(r){
+      return '<tr><td>'+esc(r.fe||r.f)+'</td><td>'+esc(r.fo)+
+             '</td><td title="'+esc(r.desc)+'">'+esc(cut(r.desc,45))+
+             '</td><td>'+(r.cant?Number(r.cant).toLocaleString('es-CL'):'')+
+             '</td><td class="tr">'+clp(r.net)+'</td></tr>'; });
+    /* TELEFONIA FIJA (fija + 600/809) */
+    var fj=(d.fija||[]).concat(d.fija600||[]);
+    pintar('pg-fj','Control de Facturación', fj, function(r){
+      return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.fo)+
+             '</td><td title="'+esc(r.desc)+'">'+esc(cut(r.desc,55))+
+             '</td><td class="tr">'+clp(r.net)+'</td></tr>'; });
+    /* OTRAS: TotalPack e Impresoras */
+    pintar('pg-ot','TotalPack', d.totalpack, function(r){
+      return '<tr><td>'+esc(r.f)+'</td><td>GESTOR DE FILA</td><td>'+esc(r.m||'')+
+             '</td><td>'+esc(r.fo)+'</td><td class="tr">'+clp(r.net)+'</td></tr>'; });
+    pintar('pg-ot','Impresión', d.impresoras, function(r){
+      return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr||'Kyocera DSChile')+
+             '</td><td>'+esc(r.fo)+'</td><td class="tr">'+clp(r.net)+'</td></tr>'; });
+  }
+  try{ if(typeof initApp==='function'){ var _o=initApp;
+    window.initApp=function(){ var x=_o.apply(this,arguments); setTimeout(run,60); return x; }; } }catch(e){}
+  if(document.readyState!=='loading') setTimeout(run,300);
+  else document.addEventListener('DOMContentLoaded',function(){ setTimeout(run,300); });
+  document.addEventListener('click',function(){ setTimeout(run,250); });
+  [900,2000,3500].forEach(function(t){ setTimeout(run,t); });
+})();
+</script>
 </body>
 </html>
