@@ -227,6 +227,10 @@ tbody tr:last-child td{border-bottom:none}
 .ph{margin-bottom:16px}
 .ph h2{font-size:18px;font-weight:800}
 .ph p{font-size:10px;color:var(--t2);margin-top:2px}
+
+/* LOGO CHIP (fondo blanco para logos JPG de cliente) */
+.lsc-clogo-wrap{background:#fff;border-radius:9px;padding:7px 12px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.lsc-clogo-wrap .lsc-clogo{max-height:38px;max-width:150px}
 </style>
 </head>
 <body>
@@ -236,9 +240,12 @@ tbody tr:last-child td{border-bottom:none}
   <div class="lg-glow"></div>
   <div class="lg-card">
     <div class="lg-logos">
-      <div class="lg-efika"><div class="efk-ic">EF</div><span class="efk-nm">EFIKA</span></div>
+      <img src="https://efika.cl/wp-content/uploads/2020/06/cropped-LOGO2.png" alt="EFIKA" class="lsc-elogo">
       <div class="lg-sep"></div>
-      <div class="lg-cs"><div class="cs-ic">C+</div><span class="cs-nm">CONSALUD</span></div>
+      <div class="lsc-clogo-wrap">
+        <img src="https://efika.cl/wp-content/uploads/2023/02/21-1.jpg" alt="Consalud" class="lsc-clogo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="lsc-cfb" style="background:#00B4CC">CS</div>
+      </div>
     </div>
     <div class="lg-h">Portal de Gestión TIC</div>
     <div class="lg-s">Reporte de Consultoría de Eficiencia · Acceso autorizado</div>
@@ -248,7 +255,6 @@ tbody tr:last-child td{border-bottom:none}
     <input id="lp" class="lg-inp" type="password" placeholder="••••••••" autocomplete="current-password">
     <button class="lg-btn" onclick="doLogin()">Ingresar →</button>
     <div id="lerr" class="lg-err">Usuario o contraseña incorrectos.</div>
-    <div class="lg-foot">Portal protegido · EFIKA Consulting · <span id="lgUpd"></span></div>
   </div>
 </div>
 
@@ -491,9 +497,6 @@ tbody tr:last-child td{border-bottom:none}
 // ── AUTH ───────────────────────────────────────────────────────────────────
 const U={'consalud':'Consalud2026','victor':'Efika2026','ignacio':'Efika2026','efika':'Efika2026','admin':'Efika2026'};
 const D=typeof PORTAL_DATA!=='undefined'?PORTAL_DATA:{kpis:{totalAhorro:1234112357,iniciConsultoria:'Junio 2022',promMensual:41.03,mesesGestion:47,factGestionadas:1700,updatedAt:''},monthly:[]};
-
-// fill login footer date
-document.getElementById('lgUpd').textContent=D.kpis.updatedAt||'';
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 function doLogin(){
