@@ -411,7 +411,7 @@ tbody tr:last-child td{border-bottom:none}
             <div class="gw"><canvas id="gSms" width="170" height="95"></canvas><div class="g-pct">16,27%</div><div class="g-lb">sobre línea base</div><div class="g-rng"><span>0%</span><span>100%</span></div></div>
           </div>
           <div class="kpp">
-            <div class="km tl"><div class="v">En blanco</div><div class="l">Línea Base</div></div>
+            <div class="km tl"><div class="v" id="smsLB">Por informar</div><div class="l">Línea Base (mensajes)</div></div>
             <div class="km bl"><div class="v">$334.952.933</div><div class="l">Facturación Total</div></div>
           </div>
         </div>
@@ -655,8 +655,80 @@ function initCharts(){
         x.style.position='sticky'; x.style.top='0'; x.style.zIndex='2'; x.style.background='#0d2430'; });
     }
   }
+  /* ── CUOTAS DE CONTRATO (acordado en reunion 04/08/2026) ────────────────
+     Se calculan solas mes a mes; el equipo no debe llenar columna en el Excel. */
+  var CONTRATOS = {
+    'pg-pv': {                                   /* Servicios Privados */
+      c1: {ini:'Noviembre 2022', fin:'Octubre 2025', n:36},
+      cuotas: [
+        {prov:'Movistar', desde:[2026,1], total:36, nota:'Segunda negociacion'},
+        {prov:'GTD',      pendiente:true,           nota:'Nueva negociacion por confirmar'}
+      ]
+    },
+    'pg-fj': {                                   /* Telefonia Fija (replica Privados) */
+      c1: {ini:'Noviembre 2022', fin:'Octubre 2025', n:36},
+      cuotas: [
+        {prov:'Movistar', desde:[2026,1], total:36, nota:'Segunda negociacion'},
+        {prov:'GTD',      pendiente:true,           nota:'Nueva negociacion por confirmar'}
+      ]
+    },
+    'pg-mv': {                                   /* Servicios Moviles: ciclos de 18 meses */
+      c1: {ini:'Noviembre 2022', fin:'Diciembre 2025', n:null},
+      cuotas: [ {prov:null, desde:[2026,1], total:18, nota:'Contrato vigente'} ]
+    },
+    'pg-sms': {                                  /* SMS: sin definicion de contrato nuevo */
+      c1: {ini:'Noviembre 2022', fin:'Octubre 2025', n:36},
+      cuotas: [ {prov:null, pendiente:true, nota:'Contrato por confirmar'} ]
+    }
+  };
+  var MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto',
+             'Septiembre','Octubre','Noviembre','Diciembre'];
+  function cuotaActual(desde){
+    var h=new Date(), y=h.getFullYear(), m=h.getMonth()+1;
+    return (y-desde[0])*12 + (m-desde[1]) + 1;
+  }
+  function tarjeta(top, val, sub, tealVal){
+    return '<div class="ck"><div class="ck-top">'+top+'</div>'+
+           '<div class="ck-v'+(tealVal?' tl':'')+'">'+val+'</div>'+
+           '<div class="ck-s">'+sub+'</div></div>';
+  }
+  function cuotas(){
+    Object.keys(CONTRATOS).forEach(function(pgId){
+      var pg=document.getElementById(pgId); if(!pg) return;
+      var cr=pg.querySelector('.cr'); if(!cr) return;
+      var cks=cr.querySelectorAll('.ck'); if(cks.length<2) return;
+      if(cr.getAttribute('data-cuotas')==='1') return;
+      var cfg=CONTRATOS[pgId];
+      var html = cks[0].outerHTML;               /* conserva "Ahorro Total" */
+      html += tarjeta('Contrato 1',
+                      cfg.c1.ini.slice(0,3)+' '+cfg.c1.ini.slice(-2)+' – '+
+                      cfg.c1.fin.slice(0,3)+' '+cfg.c1.fin.slice(-2),
+                      cfg.c1.n ? cfg.c1.n+' cuotas · finalizado' : 'Periodo finalizado', true);
+      cfg.cuotas.forEach(function(q){
+        var top = 'N° Cuota Actual' + (q.prov ? ' · '+q.prov : '');
+        if(q.pendiente){ html += tarjeta(top, 'Por confirmar', q.nota, true); return; }
+        var n = cuotaActual(q.desde);
+        if(n < 1){ html += tarjeta(top, 'Por iniciar', q.nota, true); return; }
+        if(n > q.total) n = q.total;
+        html += tarjeta(top, n+' / '+q.total,
+                        q.nota+' · desde '+MESES[q.desde[1]-1].slice(0,3)+' '+q.desde[0]);
+      });
+      cr.innerHTML = html;
+      cr.setAttribute('data-cuotas','1');
+    });
+  }
+
+  /* Linea base SMS = cantidad de mensajes (se llena cuando EFIKA cargue el dato) */
+  function lbSms(d){
+    var el=document.getElementById('smsLB'); if(!el) return;
+    var arr=d.sms||[], lb=0;
+    for(var i=arr.length-1;i>=0;i--){ var v=+arr[i].lb||0; if(v>0){ lb=v; break; } }
+    el.textContent = lb>0 ? lb.toLocaleString('es-CL')+' msj' : 'Por informar';
+  }
+
   function run(){
     var d=D(); if(!d) return;
+    cuotas(); lbSms(d);
     /* SERVICIOS PRIVADOS */
     pintar('pg-pv','Control de Facturación', d.privados, function(r){
       return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr)+'</td><td>'+esc(r.fo)+

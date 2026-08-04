@@ -307,6 +307,9 @@ def proc_sms(wb):
             "cant": to_int(r.get("Cantidad de Mensajes") or r.get("Cantidad") or 0),
             "pu":   round(to_num(r.get("Precio según negociacion ") or r.get("Precio según negociacion") or 0), 6),
             "ah":   0,  # Sin columna de ahorro explícita en esta hoja
+            # Linea base SMS = cantidad de mensajes (el ahorro se calcula con la
+            # misma cantidad cambiando el precio) — acordado en reunion 04/08/2026
+            "lb":   to_int(r.get("Linea Base") or r.get("Línea Base") or r.get("LB") or 0),
             "st":   clean(r.get("status") or r.get("Status") or ""),
         })
     print(f"    ✓ Servicios SMS: {len(out)} facturas")
