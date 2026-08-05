@@ -39,19 +39,15 @@
   var iniTxt = pIni.length>1 ? (MES[(+pIni[1]||1)-1]+' '+pIni[0]) : 'Junio 2022';
   var prom = R.length ? sum(R,function(r){return r.pct||0;})/R.length : 0;
 
-  /* Los ahorros por categoria del Excel aun no cuadran con el reporte validado
-     (en revision por EFIKA). Se conservan las cifras validadas y solo se
-     actualiza lo que si es confiable: N de facturas y fecha de sync. */
-  P.kpis = Object.assign({
-    totalAhorro:      1234112357,
-    iniciConsultoria: 'Junio 2022',
-    mesesGestion:     47,
-    promMensual:      41.03,
-    factGestionadas:  1700,
-    updatedAt:        ''
-  }, P.kpis||{});
-  if(nFact) P.kpis.factGestionadas = nFact;
-  P.kpis.updatedAt = P._updatedAt || P.kpis.updatedAt || '';
+  /* El Excel es la base de datos: todos los KPI salen de el. */
+  P.kpis = {
+    totalAhorro:      totalAh   || 0,
+    iniciConsultoria: iniTxt    || 'Junio 2022',
+    mesesGestion:     R.length  || 0,
+    promMensual:      prom > 0 ? prom : 41.03,
+    factGestionadas:  nFact     || 0,
+    updatedAt:        P._updatedAt || ''
+  };
 })();
 </script>
 <style>
@@ -361,9 +357,9 @@ tbody tr:last-child td{border-bottom:none}
           <div class="kp kgr"><div class="kp-v" id="k-sms">$132M</div><div class="kp-lb">Ahorro S. SMS</div></div>
         </div>
         <div class="g4">
-          <div class="kp kt"><div class="kp-v">$16,9M</div><div class="kp-lb">Ahorro Total Pack</div></div>
-          <div class="kp kg"><div class="kp-v">$132M</div><div class="kp-lb">Ahorro Microsoft</div></div>
-          <div class="kp kb"><div class="kp-v">$59,9M</div><div class="kp-lb">Seguridad Medical</div></div>
+          <div class="kp kt"><div class="kp-v" id="k-tp">$16,9M</div><div class="kp-lb">Ahorro Total Pack</div></div>
+          <div class="kp kg"><div class="kp-v" id="k-ms">$132M</div><div class="kp-lb">Ahorro Microsoft</div></div>
+          <div class="kp kb"><div class="kp-v" id="k-sa">$59,9M</div><div class="kp-lb">Seguridad Medical</div></div>
           <div class="kp kgr"><div class="kp-v">6</div><div class="kp-lb">Categorías TIC</div></div>
         </div>
         <div class="cc">
@@ -777,7 +773,7 @@ function initCharts(){
     function tot(k){ var t=0; R.forEach(function(r){ t+=(+r[k]||0); }); return t; }
     function m(n){ n=Math.round(n||0); var v=n/1e6;
       return '$'+(v>=100?Math.round(v):v.toFixed(1).replace('.',','))+'M'; }
-    var map={'k-pv':'pv','k-mv':'mv','k-fi':'fi','k-sms':'sms'};
+    var map={'k-pv':'pv','k-mv':'mv','k-fi':'fi','k-sms':'sms','k-ms':'ms','k-tp':'tp','k-sa':'sa'};
     Object.keys(map).forEach(function(id){
       var el=document.getElementById(id); if(!el) return;
       var v=tot(map[id]); if(v>0) el.textContent=m(v);
@@ -786,7 +782,7 @@ function initCharts(){
 
   function run(){
     var d=D(); if(!d) return;
-    cuotas(); lbSms(d);
+    cuotas(); lbSms(d); kpisReales(d);
     /* SERVICIOS PRIVADOS */
     pintar('pg-pv','Control de Facturación', d.privados, function(r){
       return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr)+'</td><td>'+esc(r.fo)+
