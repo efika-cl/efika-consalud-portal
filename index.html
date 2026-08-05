@@ -6,6 +6,52 @@
 <title>EFIKA | Portal Consalud</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="data.js"></script>
+<script>
+/* ── ADAPTADOR: construye kpis[] y monthly[] desde el nuevo data.js
+   (el sync ahora entrega resumen/privados/moviles/sms/fija/... ) ───────── */
+(function(){
+  if(typeof PORTAL_DATA==='undefined'||!PORTAL_DATA) return;
+  var P=PORTAL_DATA, R=P.resumen||[];
+  var MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto',
+           'Septiembre','Octubre','Noviembre','Diciembre'];
+  var MESC=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  function sum(a,f){var t=0;(a||[]).forEach(function(r){t+=(+f(r)||0)});return t;}
+
+  /* monthly: en millones, etiqueta corta "Ene 24" */
+  if(!P.monthly || !P.monthly.length){
+    P.monthly = R.map(function(r){
+      var p=String(r.m||'').split('-'), y=p[0]||'', mi=(+p[1]||1)-1;
+      return {
+        m:  (MESC[mi]||'')+' '+String(y).slice(2),
+        pv: (+r.pv||0)/1e6, mv:(+r.mv||0)/1e6, sms:(+r.sms||0)/1e6,
+        fi: (+r.fi||0)/1e6, ms:(+r.ms||0)/1e6, total:(+r.total||0)/1e6
+      };
+    });
+  }
+
+  /* kpis: totales reales calculados desde el Excel */
+  var nFact = (P.privados||[]).length + (P.moviles||[]).length + (P.sms||[]).length +
+              (P.fija||[]).length + (P.fija600||[]).length +
+              (P.totalpack||[]).length + (P.impresoras||[]).length;
+  var totalAh = sum(R,function(r){return r.total;});
+  var ini = R.length ? R[0].m : '';
+  var pIni = String(ini).split('-');
+  var iniTxt = pIni.length>1 ? (MES[(+pIni[1]||1)-1]+' '+pIni[0]) : 'Junio 2022';
+  var prom = R.length ? sum(R,function(r){return r.pct||0;})/R.length : 0;
+
+  P.kpis = Object.assign({
+    totalAhorro:      totalAh || 1234112357,
+    iniciConsultoria: iniTxt,
+    mesesGestion:     R.length || 47,
+    promMensual:      prom > 0 ? prom : 41.03,
+    factGestionadas:  nFact || 1700,
+    updatedAt:        P._updatedAt || ''
+  }, P.kpis||{});
+  P.kpis.factGestionadas = nFact || P.kpis.factGestionadas;
+  P.kpis.mesesGestion    = R.length || P.kpis.mesesGestion;
+  P.kpis.updatedAt       = P._updatedAt || P.kpis.updatedAt || '';
+})();
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -79,18 +125,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 }
 .hdr-menu{background:none;border:none;cursor:pointer;color:var(--t2);font-size:18px;padding:4px 6px;border-radius:6px;transition:.15s}
 .hdr-menu:hover{background:var(--border);color:#fff}
-.hdr-cs{display:flex;align-items:center;gap:7px}
-.hdr-cs-ic{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#007A8C,#00C5D8);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.hdr-cs-nm{font-size:13px;font-weight:700;color:#fff}
+.hdr-logo{background:#fff;border-radius:7px;padding:5px 11px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.hdr-logo img{height:24px;width:auto;object-fit:contain;display:block}
+.hdr-efika{height:30px;width:auto;object-fit:contain}
 .hdr-div{width:1px;height:20px;background:var(--border)}
-.hdr-title{font-size:13px;font-weight:600;color:var(--t1);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-title{font-size:13.5px;font-weight:600;color:#fff;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hdr-r{display:flex;align-items:center;gap:10px}
-.efk-badge{background:rgba(245,194,62,0.13);border:1px solid rgba(245,194,62,0.28);border-radius:7px;padding:4px 10px;display:flex;align-items:center;gap:6px}
-.efk-b-ic{width:19px;height:19px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#000}
-.efk-b-tx{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.5px}
-.hdr-user{display:flex;align-items:center;gap:7px;background:var(--border);border-radius:8px;padding:5px 10px}
-.hdr-av{width:24px;height:24px;border-radius:50%;background:var(--teal2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-.hdr-un{font-size:11px;font-weight:600;color:var(--t1)}
 .hdr-upd{font-size:10px;color:var(--t3)}
 .hdr-out{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#FCA5A5;border-radius:7px;padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
 .hdr-out:hover{background:rgba(239,68,68,0.18)}
@@ -108,19 +148,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 .sb.cl{width:54px}
 .sb-sec{padding:14px 7px;flex:1;display:flex;flex-direction:column;gap:2px}
 .ni{
-  display:flex;align-items:center;gap:9px;padding:8px 9px;
+  display:flex;align-items:center;gap:10px;padding:9px 9px;
   border-radius:10px;cursor:pointer;transition:.14s;
   border:1px solid transparent;white-space:nowrap;overflow:hidden;
 }
 .ni:hover{background:rgba(0,180,204,0.09);border-color:rgba(0,180,204,0.14)}
 .ni.ac{background:rgba(0,180,204,0.14);border-color:rgba(0,180,204,0.28)}
-.ni-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(255,255,255,0.05)}
+.ni-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,0.05)}
+.ni-ic svg{width:16px;height:16px;fill:none;stroke:var(--t2);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:.14s}
+.ni:hover .ni-ic svg{stroke:#fff}
+.ni.ac .ni-ic svg{stroke:var(--teal3)}
 .ni.ac .ni-ic{background:rgba(0,180,204,0.18)}
-.ni-lb{font-size:11px;font-weight:600;color:var(--t2);transition:.14s}
+.ni-lb{font-size:11.5px;font-weight:600;color:var(--t2);transition:.14s;letter-spacing:.1px}
 .ni:hover .ni-lb,.ni.ac .ni-lb{color:#fff}
 .ni.ac .ni-lb{color:var(--teal3)}
-.ni-am{margin-left:auto;font-size:10px;font-weight:700;color:var(--gold);white-space:nowrap}
-.sb.cl .ni-lb,.sb.cl .ni-am{display:none}
+.sb.cl .ni-lb{display:none}
 .sb-ft{padding:10px 7px;border-top:1px solid var(--border)}
 .sb-upd{font-size:10px;color:var(--t3);padding:0 9px}
 .sb.cl .sb-upd{display:none}
@@ -171,11 +213,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 .kp.kg::before{background:linear-gradient(90deg,#B07C10,#F5C23E)}
 .kp.kb::before{background:linear-gradient(90deg,#1255A0,#42A5F5)}
 .kp.kgr::before{background:linear-gradient(90deg,#065F46,#10B981)}
-.kp-ic{font-size:20px;margin-bottom:7px;opacity:.8}
-.kp-v{font-size:22px;font-weight:900;letter-spacing:-.5px;line-height:1}
+
+.kp-v{font-size:26px;font-weight:800;letter-spacing:-.8px;line-height:1.05;color:#fff}
 .kp-v.big{font-size:28px;color:var(--gold)}
 .kp-v.tl{color:var(--teal3)}.kp-v.bl{color:var(--blue2)}.kp-v.gd{color:var(--gold)}.kp-v.gr{color:var(--green)}
-.kp-lb{font-size:10px;color:var(--t2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.kp-lb{font-size:10.5px;color:var(--t2);margin-top:7px;text-transform:uppercase;letter-spacing:.7px;font-weight:600}
 
 /* CONTRACT ROW */
 .cr{display:flex;gap:10px;margin-bottom:14px}
@@ -270,25 +312,26 @@ tbody tr:last-child td{border-bottom:none}
 <div id="app">
   <header class="hdr">
     <button class="hdr-menu" onclick="toggleSB()">☰</button>
-    <div class="hdr-cs"><div class="hdr-cs-ic">C+</div><span class="hdr-cs-nm">CONSALUD</span></div>
+    <div class="hdr-logo">
+      <img src="https://efika.cl/wp-content/uploads/2023/02/21-1.jpg" alt="Consalud">
+    </div>
     <div class="hdr-div"></div>
-    <span class="hdr-title">Reporte de Servicios — Consultoría de Eficiencia TIC</span>
+    <span class="hdr-title">Reporte de Servicios de Consultoría de Eficiencia TIC</span>
     <div class="hdr-r">
       <span class="hdr-upd" id="hdrUpd"></span>
-      <div class="efk-badge"><div class="efk-b-ic">EF</div><span class="efk-b-tx">EFIKA</span></div>
-      <div class="hdr-user"><div class="hdr-av" id="hdrAv">C</div><span class="hdr-un" id="hdrUn">Consalud</span></div>
+      <img class="hdr-efika" src="https://efika.cl/wp-content/uploads/2020/06/cropped-LOGO2.png" alt="EFIKA">
       <button class="hdr-out" onclick="doLogout()">Salir</button>
     </div>
   </header>
   <div class="body">
     <aside class="sb" id="sb">
       <div class="sb-sec">
-        <div class="ni ac" onclick="goPage('main',this)"><div class="ni-ic">📊</div><span class="ni-lb">Consalud</span></div>
-        <div class="ni" onclick="goPage('pv',this)"><div class="ni-ic">🔒</div><span class="ni-lb">Servicios Privados</span><span class="ni-am">$734M</span></div>
-        <div class="ni" onclick="goPage('mv',this)"><div class="ni-ic">📱</div><span class="ni-lb">Servicios Móviles</span><span class="ni-am">$174M</span></div>
-        <div class="ni" onclick="goPage('sms',this)"><div class="ni-ic">💬</div><span class="ni-lb">Servicios SMS</span><span class="ni-am">$112M</span></div>
-        <div class="ni" onclick="goPage('fj',this)"><div class="ni-ic">📞</div><span class="ni-lb">Telefonía Fija</span><span class="ni-am">$49M</span></div>
-        <div class="ni" onclick="goPage('ot',this)"><div class="ni-ic">⚙️</div><span class="ni-lb">Otras Negociaciones</span><span class="ni-am">$208M</span></div>
+        <div class="ni ac" onclick="goPage('main',this)"><div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></div><span class="ni-lb">Dashboard General</span></div>
+        <div class="ni" onclick="goPage('pv',this)"><div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/><circle cx="12" cy="13.5" r="1.6"/></svg></div><span class="ni-lb">Servicios Privados</span></div>
+        <div class="ni" onclick="goPage('mv',this)"><div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10.5" y1="18.4" x2="13.5" y2="18.4"/></svg></div><span class="ni-lb">Servicios Móviles</span></div>
+        <div class="ni" onclick="goPage('sms',this)"><div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M21 14a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg></div><span class="ni-lb">Servicios SMS</span></div>
+        <div class="ni" onclick="goPage('fj',this)"><div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1A19.5 19.5 0 0 1 5 12a19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 3.9 1h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.4 2.1L8.1 8.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7A2 2 0 0 1 22 16.9z"/></svg></div><span class="ni-lb">Telefonía Fija</span></div>
+        <div class="ni" onclick="goPage('ot',this)"><div class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg></div><span class="ni-lb">Otras Negociaciones</span></div>
       </div>
       <div class="sb-ft"><div class="sb-upd" id="sbUpd"></div></div>
     </aside>
@@ -310,16 +353,16 @@ tbody tr:last-child td{border-bottom:none}
           </div>
         </div>
         <div class="g4">
-          <div class="kp kg"><div class="kp-ic">🔒</div><div class="kp-v">$646M</div><div class="kp-lb">Ahorro S. Privado</div></div>
-          <div class="kp kb"><div class="kp-ic">📱</div><div class="kp-v">$166M</div><div class="kp-lb">Ahorro S. Móvil</div></div>
-          <div class="kp kt"><div class="kp-ic">📞</div><div class="kp-v">$80M</div><div class="kp-lb">Ahorro T. Fija</div></div>
-          <div class="kp kgr"><div class="kp-ic">💬</div><div class="kp-v">$132M</div><div class="kp-lb">Ahorro S. SMS</div></div>
+          <div class="kp kg"><div class="kp-v" id="k-pv">$646M</div><div class="kp-lb">Ahorro S. Privado</div></div>
+          <div class="kp kb"><div class="kp-v" id="k-mv">$166M</div><div class="kp-lb">Ahorro S. Móvil</div></div>
+          <div class="kp kt"><div class="kp-v" id="k-fi">$80M</div><div class="kp-lb">Ahorro T. Fija</div></div>
+          <div class="kp kgr"><div class="kp-v" id="k-sms">$132M</div><div class="kp-lb">Ahorro S. SMS</div></div>
         </div>
         <div class="g4">
-          <div class="kp kt"><div class="kp-ic">📦</div><div class="kp-v">$16,9M</div><div class="kp-lb">Ahorro Total Pack</div></div>
-          <div class="kp kg"><div class="kp-ic">💻</div><div class="kp-v">$132M</div><div class="kp-lb">Ahorro Microsoft</div></div>
-          <div class="kp kb"><div class="kp-ic">🏥</div><div class="kp-v">$59,9M</div><div class="kp-lb">Seguridad Medical</div></div>
-          <div class="kp kgr"><div class="kp-ic">🎯</div><div class="kp-v">6</div><div class="kp-lb">Categorías TIC</div></div>
+          <div class="kp kt"><div class="kp-v">$16,9M</div><div class="kp-lb">Ahorro Total Pack</div></div>
+          <div class="kp kg"><div class="kp-v">$132M</div><div class="kp-lb">Ahorro Microsoft</div></div>
+          <div class="kp kb"><div class="kp-v">$59,9M</div><div class="kp-lb">Seguridad Medical</div></div>
+          <div class="kp kgr"><div class="kp-v">6</div><div class="kp-lb">Categorías TIC</div></div>
         </div>
         <div class="cc">
           <h3>Comportamiento Ahorro Total</h3>
@@ -465,9 +508,9 @@ tbody tr:last-child td{border-bottom:none}
       <div class="pg" id="pg-ot">
         <div class="ph"><h2>Otras Negociaciones</h2><p>TotalPack · Seguridad Medical · Microsoft · Servicios Impresión</p></div>
         <div class="g3">
-          <div class="kp kt" style="padding:20px 22px"><div class="kp-ic">📦</div><div class="kp-v big">$16.909.163</div><div class="kp-lb" style="font-size:11px;margin-top:7px">Ahorro TotalPack</div></div>
-          <div class="kp kb" style="padding:20px 22px"><div class="kp-ic">🏥</div><div class="kp-v big">$59.988.360</div><div class="kp-lb" style="font-size:11px;margin-top:7px">Ahorro Seguridad Medical</div></div>
-          <div class="kp kg" style="padding:20px 22px"><div class="kp-ic">💻</div><div class="kp-v big">$132.077.360</div><div class="kp-lb" style="font-size:11px;margin-top:7px">Ahorro Total Microsoft</div></div>
+          <div class="kp kt" style="padding:20px 22px"><div class="kp-v big">$16.909.163</div><div class="kp-lb" style="font-size:11px;margin-top:7px">Ahorro TotalPack</div></div>
+          <div class="kp kb" style="padding:20px 22px"><div class="kp-v big">$59.988.360</div><div class="kp-lb" style="font-size:11px;margin-top:7px">Ahorro Seguridad Medical</div></div>
+          <div class="kp kg" style="padding:20px 22px"><div class="kp-v big">$132.077.360</div><div class="kp-lb" style="font-size:11px;margin-top:7px">Ahorro Total Microsoft</div></div>
         </div>
         <div class="g2">
           <div class="cc"><h3>Facturación TotalPack</h3><div class="sub">Gestor de Fila (CLP)</div><div class="cw h190"><canvas id="cPk"></canvas></div></div>
@@ -475,7 +518,7 @@ tbody tr:last-child td{border-bottom:none}
         </div>
         <div class="g2">
           <div class="tc">
-            <div class="th"><h3>TotalPack — Gestor de Fila</h3><span class="ba">Recientes</span></div>
+            <div class="th"><h3>TotalPack · Gestor de Fila</h3><span class="ba">Recientes</span></div>
             <table><thead><tr><th>Fecha</th><th>Descripción</th><th>Período</th><th>N° Factura</th><th>Monto</th></tr></thead>
             <tbody>
               <tr><td>18/05/2026</td><td>GESTOR DE FILA</td><td>Abril</td><td>98219</td><td class="tr">$2.850.000</td></tr>
@@ -485,7 +528,7 @@ tbody tr:last-child td{border-bottom:none}
             </tbody></table>
           </div>
           <div class="tc">
-            <div class="th"><h3>Impresión — Kyocera</h3><span class="ba">28 facturas</span></div>
+            <div class="th"><h3>Impresión Kyocera</h3><span class="ba">28 facturas</span></div>
             <table><thead><tr><th>Fecha</th><th>Proveedor</th><th>N° Factura</th><th>Monto Neto</th></tr></thead>
             <tbody>
               <tr><td>01/07/2025</td><td>Kyocera DSChile</td><td>61222</td><td class="tr">$4.020.894</td></tr>
@@ -726,9 +769,22 @@ function initCharts(){
     el.textContent = lb>0 ? lb.toLocaleString('es-CL')+' msj' : 'Por informar';
   }
 
+  /* KPIs del dashboard calculados desde el Excel */
+  function kpisReales(d){
+    var R=d.resumen||[]; if(!R.length) return;
+    function tot(k){ var t=0; R.forEach(function(r){ t+=(+r[k]||0); }); return t; }
+    function m(n){ n=Math.round(n||0); var v=n/1e6;
+      return '$'+(v>=100?Math.round(v):v.toFixed(1).replace('.',','))+'M'; }
+    var map={'k-pv':'pv','k-mv':'mv','k-fi':'fi','k-sms':'sms'};
+    Object.keys(map).forEach(function(id){
+      var el=document.getElementById(id); if(!el) return;
+      var v=tot(map[id]); if(v>0) el.textContent=m(v);
+    });
+  }
+
   function run(){
     var d=D(); if(!d) return;
-    cuotas(); lbSms(d);
+    cuotas(); lbSms(d); kpisReales(d);
     /* SERVICIOS PRIVADOS */
     pintar('pg-pv','Control de Facturación', d.privados, function(r){
       return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr)+'</td><td>'+esc(r.fo)+
