@@ -91,6 +91,29 @@ def to_yyyymm(val):
         return f"{s[6:10]}-{s[3:5]}"
     return s
 
+_MESES_ES = {"ene":1,"feb":2,"mar":3,"abr":4,"may":5,"jun":6,
+             "jul":7,"ago":8,"sep":9,"set":9,"oct":10,"nov":11,"dic":12}
+
+def _mes_texto(s):
+    """'junio 2022' / 'jun-22' / 'Junio-2022' -> '2022-06-01'."""
+    import re as _re
+    t = str(s).lower().strip()
+    mm = None
+    for k, v in _MESES_ES.items():
+        if k in t:
+            mm = v; break
+    if not mm:
+        return ""
+    y = _re.search(r"(20\d{2})", t)
+    if y:
+        yy = int(y.group(1))
+    else:
+        y2 = _re.search(r"(\d{2})\s*$", t)
+        if not y2:
+            return ""
+        yy = 2000 + int(y2.group(1))
+    return f"{yy}-{mm:02d}-01"
+
 def to_yyyymmdd(val):
     """Fecha → 'YYYY-MM-DD' (para resumen.m, compatible con .slice(0,7))."""
     if val is None:
@@ -218,6 +241,10 @@ def proc_resumen(wb):
         m = to_yyyymmdd(mes_val)
         if not m or m.startswith("None"):
             continue
+        if len(m) < 7 or m[4] != "-":       # texto tipo "junio 2022" / "jun-22"
+            m = _mes_texto(m)
+            if not m:
+                continue
 
         mv  = to_int(r.get("Ahorro S.Movil")   or r.get("Ahorro S. Movil")  or r.get("MÓVILES") or 0)
         sms = to_int(r.get("Ahorro S. SMS")    or r.get("Ahorro S.SMS")     or 0)
@@ -228,10 +255,16 @@ def proc_resumen(wb):
         ky  = to_int(r.get("Ahorro Kyochera")  or r.get("Ahorro Kyocera")   or 0)
 
         # GESTIÓN EFIKA = total mensual de ahorros gestionados por EFIKA
-        gestion = to_int(r.get("GESTIÓN EFIKA") or r.get("GESTION EFIKA") or r.get("Ahorros Totales MES") or 0)
-        total   = gestion if gestion else (mv + sms + pv + fi + ms + tp + ky)
+        sa  = to_int(r.get("Ahorro Seguridad America") or r.get("Ahorro Seguridad Medical") or 0)
 
-        out.append({"m": m, "total": total, "mv": mv, "sms": sms, "pv": pv, "fi": fi, "ms": ms, "ah": total})
+        # En Consalud la columna "Ahorro Acumulado GESTION EFIKA" es ACUMULADA:
+        # no sirve como total mensual. Se usa la suma de categorias del mes.
+        total = mv + sms + pv + fi + ms + tp + ky + sa
+        if total == 0:
+            continue
+
+        out.append({"m": m, "total": total, "mv": mv, "sms": sms, "pv": pv,
+                    "fi": fi, "ms": ms, "tp": tp, "sa": sa, "ah": total})
 
     out.sort(key=lambda x: x["m"])
     print(f"    ✓ Resumen Ahorros: {len(out)} meses")

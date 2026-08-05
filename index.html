@@ -560,11 +560,11 @@ function doLogin(){
     setTimeout(()=>{
       ls.style.display='none';
       document.getElementById('app').classList.add('on');
-      document.getElementById('hdrUn').textContent=u.charAt(0).toUpperCase()+u.slice(1);
-      document.getElementById('hdrAv').textContent=u.charAt(0).toUpperCase();
-      document.getElementById('hdrUpd').textContent='Datos: '+D.kpis.updatedAt;
-      document.getElementById('sbUpd').textContent='Actualizado: '+D.kpis.updatedAt;
-      fillKpis();initCharts();
+      var _u=document.getElementById('hdrUpd'), _s=document.getElementById('sbUpd');
+      if(_u) _u.textContent='Datos actualizados: '+(D.kpis.updatedAt||'');
+      if(_s) _s.textContent='Actualizado: '+(D.kpis.updatedAt||'');
+      try{ fillKpis(); }catch(e){ console.warn('fillKpis',e); }
+      try{ initCharts(); }catch(e){ console.warn('initCharts',e); }
     },350);
   }else{err.style.display='block';document.getElementById('lp').value='';document.getElementById('lp').focus()}
 }
