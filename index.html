@@ -39,17 +39,19 @@
   var iniTxt = pIni.length>1 ? (MES[(+pIni[1]||1)-1]+' '+pIni[0]) : 'Junio 2022';
   var prom = R.length ? sum(R,function(r){return r.pct||0;})/R.length : 0;
 
+  /* Los ahorros por categoria del Excel aun no cuadran con el reporte validado
+     (en revision por EFIKA). Se conservan las cifras validadas y solo se
+     actualiza lo que si es confiable: N de facturas y fecha de sync. */
   P.kpis = Object.assign({
-    totalAhorro:      totalAh || 1234112357,
-    iniciConsultoria: iniTxt,
-    mesesGestion:     R.length || 47,
-    promMensual:      prom > 0 ? prom : 41.03,
-    factGestionadas:  nFact || 1700,
-    updatedAt:        P._updatedAt || ''
+    totalAhorro:      1234112357,
+    iniciConsultoria: 'Junio 2022',
+    mesesGestion:     47,
+    promMensual:      41.03,
+    factGestionadas:  1700,
+    updatedAt:        ''
   }, P.kpis||{});
-  P.kpis.factGestionadas = nFact || P.kpis.factGestionadas;
-  P.kpis.mesesGestion    = R.length || P.kpis.mesesGestion;
-  P.kpis.updatedAt       = P._updatedAt || P.kpis.updatedAt || '';
+  if(nFact) P.kpis.factGestionadas = nFact;
+  P.kpis.updatedAt = P._updatedAt || P.kpis.updatedAt || '';
 })();
 </script>
 <style>
@@ -784,7 +786,7 @@ function initCharts(){
 
   function run(){
     var d=D(); if(!d) return;
-    cuotas(); lbSms(d); kpisReales(d);
+    cuotas(); lbSms(d);
     /* SERVICIOS PRIVADOS */
     pintar('pg-pv','Control de Facturación', d.privados, function(r){
       return '<tr><td>'+esc(r.f)+'</td><td>'+esc(r.pr)+'</td><td>'+esc(r.fo)+
