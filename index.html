@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>EFIKA | Portal Consalud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="data.js"></script>
 <script>
@@ -60,7 +63,7 @@
   --border:rgba(255,255,255,0.07);--border2:rgba(0,180,204,0.22);
   --sw:220px;--hh:56px;
 }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff;overflow:hidden;height:100vh}
+body{font-family:'Poppins','Segoe UI',system-ui,sans-serif;font-feature-settings:'tnum' 1;background:var(--bg);color:#fff;overflow:hidden;height:100vh}
 
 /* ── LOGIN ─────────────────────────────────────────────────────────────── */
 #loginScreen{
@@ -78,13 +81,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 }
 .lg-logos{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
 .lg-efika{display:flex;align-items:center;gap:9px}
-.efk-ic{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#000;letter-spacing:-1px}
-.efk-nm{font-size:17px;font-weight:800;color:#fff;letter-spacing:.3px}
+.efk-ic{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000;letter-spacing:-1px}
+.efk-nm{font-size:17px;font-weight:600;color:#fff;letter-spacing:.3px}
 .lg-cs{display:flex;align-items:center;gap:7px}
-.cs-ic{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#007A8C,#00C5D8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff}
+.cs-ic{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#007A8C,#00C5D8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
 .cs-nm{font-size:13px;font-weight:700;color:var(--teal3)}
 .lg-sep{width:1px;height:34px;background:var(--border)}
-.lg-h{font-size:22px;font-weight:800;margin-bottom:4px}
+.lg-h{font-size:22px;font-weight:600;margin-bottom:4px}
 .lg-s{font-size:12px;color:var(--t2);margin-bottom:26px;line-height:1.55}
 .lg-lbl{display:block;font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px}
 .lg-inp{
@@ -146,7 +149,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 .sb.cl{width:54px}
 .sb-sec{padding:14px 7px;flex:1;display:flex;flex-direction:column;gap:2px}
 .ni{
-  display:flex;align-items:center;gap:10px;padding:9px 9px;
+  display:flex;align-items:center;gap:11px;padding:10px 10px;
   border-radius:10px;cursor:pointer;transition:.14s;
   border:1px solid transparent;white-space:nowrap;overflow:hidden;
 }
@@ -184,12 +187,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 }
 .hero-m{flex:1}
 .hero-tg{font-size:10px;font-weight:700;color:var(--teal3);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:5px}
-.hero-am{font-size:38px;font-weight:900;color:var(--gold);letter-spacing:-1.5px;line-height:1}
+.hero-am{font-variant-numeric:tabular-nums;font-size:38px;font-weight:700;color:var(--gold);letter-spacing:-1.5px;line-height:1}
 .hero-sb{font-size:11px;color:var(--t2);margin-top:5px}
 .hero-sb span{color:var(--teal3);font-weight:600}
 .hero-sts{display:flex;gap:16px}
 .hst{text-align:center;padding:12px 16px;background:rgba(0,0,0,.18);border-radius:11px;border:1px solid rgba(255,255,255,.05);min-width:100px}
-.hst-n{font-size:20px;font-weight:800}
+.hst-n{font-size:20px;font-weight:600}
 .hst-n.gd{color:var(--gold)}.hst-n.tl{color:var(--teal3)}
 .hst-l{font-size:9px;color:var(--t2);margin-top:2px;text-transform:uppercase;letter-spacing:.3px;line-height:1.3}
 
@@ -202,21 +205,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 
 /* KPI CARD */
 .kp{
-  background:linear-gradient(135deg,var(--card2),var(--card));
-  border:1px solid var(--border);border-radius:13px;
+  background:var(--card);
+  border:1px solid var(--border);border-radius:10px;
   padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s;
 }
 .kp:hover{border-color:var(--border2)}
-.kp::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:13px 13px 0 0}
+.kp::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;border-radius:10px 13px 0 0}
 .kp.kt::before{background:linear-gradient(90deg,#006E80,#00C5D8)}
 .kp.kg::before{background:linear-gradient(90deg,#B07C10,#F5C23E)}
 .kp.kb::before{background:linear-gradient(90deg,#1255A0,#42A5F5)}
 .kp.kgr::before{background:linear-gradient(90deg,#065F46,#10B981)}
 
-.kp-v{font-size:26px;font-weight:800;letter-spacing:-.8px;line-height:1.05;color:#fff}
+.kp-v:not(:has(*)){}
+.kp-v{font-size:23px;font-weight:600;letter-spacing:-.4px;line-height:1.15;color:#fff;
+  font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1}
 .kp-v.big{font-size:28px;color:var(--gold)}
 .kp-v.tl{color:var(--teal3)}.kp-v.bl{color:var(--blue2)}.kp-v.gd{color:var(--gold)}.kp-v.gr{color:var(--green)}
-.kp-lb{font-size:10.5px;color:var(--t2);margin-top:7px;text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+.kp-lb{font-size:10px;color:var(--t2);margin-top:8px;text-transform:uppercase;letter-spacing:.6px;font-weight:500}
 
 /* CONTRACT ROW */
 .cr{display:flex;gap:10px;margin-bottom:14px}
@@ -225,12 +230,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
   border:1px solid rgba(0,180,204,.18);border-radius:12px;padding:13px 15px;
 }
 .ck-top{font-size:9px;color:var(--teal3);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
-.ck-v{font-size:15px;font-weight:800;color:var(--gold)}
+.ck-v{font-size:15px;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:-.2px}
 .ck-v.tl{color:var(--teal3)}
 .ck-s{font-size:9px;color:var(--t3);margin-top:2px}
 
 /* CHART CARD */
-.cc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px 18px;flex:1}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;flex:1}
 .cc h3{font-size:12px;font-weight:700;margin-bottom:2px}
 .cc .sub{font-size:10px;color:var(--t2);margin-bottom:12px}
 .cw{position:relative}.cw.h200{height:200px}.cw.h190{height:190px}.cw.h170{height:170px}
@@ -238,35 +243,35 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#fff
 /* GAUGE */
 .gw{display:flex;flex-direction:column;align-items:center;padding:6px 0}
 .gw canvas{width:170px!important;height:95px!important}
-.g-pct{font-size:26px;font-weight:900;color:var(--blue2);margin-top:-6px;letter-spacing:-.5px}
+.g-pct{font-size:26px;font-weight:700;color:var(--blue2);margin-top:-6px;letter-spacing:-.5px}
 .g-lb{font-size:9px;color:var(--t2);text-align:center;margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
 .g-rng{display:flex;justify-content:space-between;width:150px;font-size:9px;color:var(--t3);margin-top:3px}
 
 /* KPI PAIR */
 .kpp{display:flex;flex-direction:column;gap:10px;flex:1;min-width:140px}
 .km{background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:13px 14px;flex:1}
-.km .v{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:-.3px}
+.km .v{font-size:16px;font-weight:600;color:var(--gold);letter-spacing:-.3px;font-variant-numeric:tabular-nums}
 .km .l{font-size:9px;color:var(--t2);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
 .km.bl .v{color:var(--blue2)}.km.tl .v{color:var(--teal3)}.km.gr .v{color:var(--green)}
 
 /* TABLE */
-.tc{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden}
-.th{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.th h3{font-size:11px;font-weight:700}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.th{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.th h3{font-size:12.5px;font-weight:600;letter-spacing:-.1px}
 .th .ba{background:rgba(0,180,204,.1);border:1px solid rgba(0,180,204,.2);border-radius:20px;padding:2px 9px;font-size:9px;font-weight:600;color:var(--teal3)}
-table{width:100%;border-collapse:collapse;font-size:11px}
-thead th{background:rgba(255,255,255,.03);padding:8px 12px;text-align:left;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.4px;font-size:9px;border-bottom:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
+thead th{background:rgba(255,255,255,.02);padding:10px 14px;text-align:left;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.4px;font-size:9px;border-bottom:1px solid var(--border)}
 thead th:last-child{text-align:right}
-tbody td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.025);color:var(--t1)}
+tbody td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--t1);white-space:nowrap}
 tbody tr:hover td{background:rgba(255,255,255,.015)}
 tbody tr:last-child td{border-bottom:none}
-.tr{text-align:right;font-weight:700;color:var(--gold)}
+.tr{text-align:right;font-weight:600;color:#fff;font-variant-numeric:tabular-nums}
 .tbl{color:var(--blue2)!important;font-weight:600}
 .tgr{color:var(--green)!important}
 
 /* PAGE HEADER */
-.ph{margin-bottom:16px}
-.ph h2{font-size:18px;font-weight:800}
+.ph{margin-bottom:20px}
+.ph h2{font-size:20px;font-weight:600;letter-spacing:-.3px}
 .ph p{font-size:10px;color:var(--t2);margin-top:2px}
 
 /* LOGIN LOGOS — EFIKA izquierda / cliente derecha (unificado con el resto de portales) */
@@ -275,7 +280,7 @@ tbody tr:last-child td{border-bottom:none}
 .lsc-div{width:1px;height:32px;background:rgba(255,255,255,0.1);margin:0 8px}
 .lsc-client{display:flex;align-items:center;justify-content:flex-end;max-width:160px}
 .lsc-clogo{max-height:56px;max-width:190px;object-fit:contain;display:block}
-.lsc-cfb{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;display:none}
+.lsc-cfb{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;display:none}
 
 /* LOGO CHIP (fondo blanco para logos JPG de cliente) */
 .lsc-clogo-wrap{background:#fff;border-radius:9px;padding:7px 12px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.18)}
@@ -353,16 +358,16 @@ tbody tr:last-child td{border-bottom:none}
           </div>
         </div>
         <div class="g4">
-          <div class="kp kg"><div class="kp-v" id="k-pv">$0</div><div class="kp-lb">Ahorro S. Privado</div></div>
-          <div class="kp kb"><div class="kp-v" id="k-mv">$0</div><div class="kp-lb">Ahorro S. Móvil</div></div>
-          <div class="kp kt"><div class="kp-v" id="k-fi">$0</div><div class="kp-lb">Ahorro T. Fija</div></div>
-          <div class="kp kgr"><div class="kp-v" id="k-sms">$0</div><div class="kp-lb">Ahorro S. SMS</div></div>
+          <div class="kp kg"><div class="kp-v" id="k-pv">—</div><div class="kp-lb">Ahorro S. Privado</div></div>
+          <div class="kp kb"><div class="kp-v" id="k-mv">—</div><div class="kp-lb">Ahorro S. Móvil</div></div>
+          <div class="kp kt"><div class="kp-v" id="k-fi">—</div><div class="kp-lb">Ahorro T. Fija</div></div>
+          <div class="kp kgr"><div class="kp-v" id="k-sms">—</div><div class="kp-lb">Ahorro S. SMS</div></div>
         </div>
         <div class="g4">
-          <div class="kp kt"><div class="kp-v" id="k-tp">$0</div><div class="kp-lb">Ahorro Total Pack</div></div>
-          <div class="kp kg"><div class="kp-v" id="k-ms">$0</div><div class="kp-lb">Ahorro Microsoft</div></div>
-          <div class="kp kb"><div class="kp-v" id="k-sa">$0</div><div class="kp-lb">Seguridad Medical</div></div>
-          <div class="kp kgr"><div class="kp-v" id="k-im">$0</div><div class="kp-lb">Ahorro Impresión</div></div>
+          <div class="kp kt"><div class="kp-v" id="k-tp">—</div><div class="kp-lb">Ahorro Total Pack</div></div>
+          <div class="kp kg"><div class="kp-v" id="k-ms">—</div><div class="kp-lb">Ahorro Microsoft</div></div>
+          <div class="kp kb"><div class="kp-v" id="k-sa">—</div><div class="kp-lb">Seguridad Medical</div></div>
+          <div class="kp kgr"><div class="kp-v" id="k-im">—</div><div class="kp-lb">Ahorro Impresión</div></div>
         </div>
         <div class="cc">
           <h3>Comportamiento Ahorro Total</h3>
@@ -508,9 +513,9 @@ tbody tr:last-child td{border-bottom:none}
       <div class="pg" id="pg-im">
         <div class="ph"><h2>Servicios de Impresión</h2></div>
         <div class="cr">
-          <div class="ck"><div class="ck-top">Ahorro Total</div><div class="ck-v" id="ah-im">$0</div><div class="ck-s">Acumulado gestión EFIKA</div></div>
-          <div class="ck"><div class="ck-top">Facturación Total</div><div class="ck-v tl" id="fa-im">$0</div><div class="ck-s">Neto acumulado</div></div>
-          <div class="ck"><div class="ck-top">Facturas Gestionadas</div><div class="ck-v tl" id="nf-im">0</div><div class="ck-s">Documentos en control</div></div>
+          <div class="ck"><div class="ck-top">Ahorro Total</div><div class="ck-v" id="ah-im">—</div><div class="ck-s">Acumulado gestión EFIKA</div></div>
+          <div class="ck"><div class="ck-top">Facturación Total</div><div class="ck-v tl" id="fa-im">—</div><div class="ck-s">Neto acumulado</div></div>
+          <div class="ck"><div class="ck-top">Facturas Gestionadas</div><div class="ck-v tl" id="nf-im">—</div><div class="ck-s">Documentos en control</div></div>
         </div>
         <div class="chart-full">
           <div class="cc"><h3>Comportamiento Facturación</h3><div class="sub">Facturación mensual servicios de impresión (CLP)</div><div class="cw h190"><canvas id="cImp"></canvas></div></div>
