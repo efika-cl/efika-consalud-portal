@@ -126,8 +126,8 @@ body{font-family:'Poppins','Segoe UI',system-ui,sans-serif;font-feature-settings
 }
 .hdr-menu{background:none;border:none;cursor:pointer;color:var(--t2);font-size:18px;padding:4px 6px;border-radius:6px;transition:.15s}
 .hdr-menu:hover{background:var(--border);color:#fff}
-.hdr-logo{background:#fff;border-radius:7px;padding:5px 11px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.22)}
-.hdr-logo img{height:24px;width:auto;object-fit:contain;display:block}
+.hdr-logo{display:flex;align-items:center}
+.hdr-logo img{height:26px;width:auto;object-fit:contain;display:block}
 .hdr-efika{height:30px;width:auto;object-fit:contain}
 .hdr-div{width:1px;height:20px;background:var(--border)}
 .hdr-title{font-size:13.5px;font-weight:600;color:#fff;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -283,8 +283,8 @@ tbody tr:last-child td{border-bottom:none}
 .lsc-cfb{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;display:none}
 
 /* LOGO CHIP (fondo blanco para logos JPG de cliente) */
-.lsc-clogo-wrap{background:#fff;border-radius:9px;padding:7px 12px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.18)}
-.lsc-clogo-wrap .lsc-clogo{max-height:38px;max-width:150px}
+.lsc-clogo-wrap{display:flex;align-items:center;justify-content:center}
+.lsc-clogo-wrap .lsc-clogo{max-height:34px;max-width:165px}
 </style>
 </head>
 <body>
@@ -297,7 +297,7 @@ tbody tr:last-child td{border-bottom:none}
       <img src="https://efika.cl/wp-content/uploads/2020/06/cropped-LOGO2.png" alt="EFIKA" class="lsc-elogo">
       <div class="lg-sep"></div>
       <div class="lsc-clogo-wrap">
-        <img src="https://efika.cl/wp-content/uploads/2023/02/21-1.jpg" alt="Consalud" class="lsc-clogo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <img src="logo-consalud.png" alt="Consalud" class="lsc-clogo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="lsc-cfb" style="background:#00B4CC">CS</div>
       </div>
     </div>
@@ -317,7 +317,7 @@ tbody tr:last-child td{border-bottom:none}
   <header class="hdr">
     <button class="hdr-menu" onclick="toggleSB()">☰</button>
     <div class="hdr-logo">
-      <img src="https://efika.cl/wp-content/uploads/2023/02/21-1.jpg" alt="Consalud">
+      <img src="logo-consalud.png" alt="Consalud">
     </div>
     <div class="hdr-div"></div>
     <span class="hdr-title">Reporte de Servicios de Consultoría de Eficiencia TIC</span>
